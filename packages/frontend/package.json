@@ -39,6 +39,7 @@
     "abitype": "^0.8.11",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "date-fns": "^4.1.0",
     "graphql": "^16.8.1",
     "graphql-request": "^6.1.0",
     "immer": "^10.0.3",

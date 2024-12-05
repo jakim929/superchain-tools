@@ -4,9 +4,9 @@ import { Outlet } from "react-router-dom";
 
 export const NavBarLayout = () => {
   return (
-    <div className="min-h-screen">
+    <div className="flex flex-col">
       <NavBar />
-      <div className="flex h-[calc(100vh-4rem)]">
+      <div className="flex flex-1">
         <SideNav />
         <main className="flex-1 p-8">
           <Outlet />

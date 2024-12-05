@@ -2,6 +2,7 @@ import { supersimChains } from "@/supersim/supersimChains";
 import { superchainRegistryChains } from "@/superchain-registry/superchainRegistryChains";
 import { Chain } from "viem/chains";
 import { viemChainById } from "@/viemChainById";
+export { chainListLastUpdated } from "@/generated/chainList";
 
 export const chains: Chain[] = [
   ...superchainRegistryChains,

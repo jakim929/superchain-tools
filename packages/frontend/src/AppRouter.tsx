@@ -3,6 +3,7 @@ import { BridgePage } from "@/pages/BridgePage";
 import { ChainsPage } from "@/pages/ChainsPage";
 import { L2ToL1RelayerPage } from "@/pages/L2ToL1RelayerPage";
 import { SuperchainERC20ChecksPage } from "@/pages/SuperchainERC20ChecksPage";
+import { SuperchainMessageRelayer } from "@/pages/SuperchainMessageRelayer";
 import { SuperchainTokenBridgePage } from "@/pages/SuperchainTokenBridgePage";
 import {
   Navigate,
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
       {
         path: "/superchain-token-bridge",
         element: <SuperchainTokenBridgePage />,
+      },
+      {
+        path: "/superchain-message-relayer",
+        element: <SuperchainMessageRelayer />,
       },
     ],
   },

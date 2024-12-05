@@ -5,6 +5,7 @@ import {
   CheckCircle,
   ArrowBigLeft,
   ArrowBigRight,
+  MessageSquare,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -37,7 +38,7 @@ const NavItem = ({
 
 export const SideNav = () => {
   return (
-    <div className="h-full border-r bg-background/95 p-4 flex flex-col">
+    <div className="self-stretch border-r bg-background/95 p-4 flex flex-col">
       <nav className="flex flex-col space-y-2">
         <NavItem to="/chains" title="Chains" icon={LayersIcon} />
         <NavItem to="/bridge" title="L1 to L2 Bridge" icon={ArrowBigRight} />
@@ -55,6 +56,11 @@ export const SideNav = () => {
           to="/superchain-token-bridge"
           title="Superchain Token Bridge"
           icon={ArrowLeftRight}
+        />
+        <NavItem
+          to="/superchain-message-relayer"
+          title="Superchain Message Relayer"
+          icon={MessageSquare}
         />
       </nav>
     </div>

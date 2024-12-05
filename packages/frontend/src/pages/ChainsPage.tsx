@@ -6,7 +6,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { chains, sourceChainById } from "@superchain-tools/chains";
+import {
+  chains,
+  sourceChainById,
+  chainListLastUpdated,
+} from "@superchain-tools/chains";
 
 import {
   Table,
@@ -21,6 +25,8 @@ import { useSwitchChain } from "wagmi";
 import { Chain } from "viem";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
+import { Clock } from "lucide-react";
+import { format } from "date-fns";
 
 const ChainRow = ({ chain }: { chain: Chain }) => {
   const { switchChain } = useSwitchChain();
@@ -89,16 +95,22 @@ export const ChainsPage = () => {
           <CardTitle className="text-3xl font-bold tracking-tight">
             OP Stack Chains
           </CardTitle>
-          <CardDescription>
-            Sourced from the{" "}
-            <a
-              href="https://github.com/ethereum-optimism/superchain-registry"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-primary hover:text-primary/80 underline underline-offset-4"
-            >
-              Superchain Registry
-            </a>
+          <CardDescription className="flex items-center justify-between">
+            <div>
+              Sourced from the{" "}
+              <a
+                href="https://github.com/ethereum-optimism/superchain-registry"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-primary hover:text-primary/80 underline underline-offset-4"
+              >
+                Superchain Registry
+              </a>
+            </div>
+            <div className="flex items-center gap-1 text-muted-foreground text-sm">
+              <Clock className="h-4 w-4" />
+              <span>Last updated: {format(chainListLastUpdated, "PPpp")}</span>
+            </div>
           </CardDescription>
         </CardHeader>
         <CardContent>
