@@ -1,4 +1,4 @@
-# Superchain Testnet Tools
+# Superchain Tools
 
 ## How to run locally
 

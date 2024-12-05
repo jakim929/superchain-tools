@@ -1,3 +1,3 @@
-# @superchain-testnet-tools/common-ts
+# @superchain-tools/common-ts
 
 Shared typescript code

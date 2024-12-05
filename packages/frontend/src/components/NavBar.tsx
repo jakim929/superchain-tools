@@ -1,57 +1,51 @@
-import { cn } from '@/lib/utils'
-import { ConnectButton } from '@rainbow-me/rainbowkit'
-import { Link, useLocation } from 'react-router-dom'
-
-const Banner = () => {
-  return (
-    <Link to="/" className="font-mono text-sm font-bold leading-none">
-      SUPERCHAIN <br />
-      TESTNET <br />
-      TOOLS
-    </Link>
-  )
-}
-
-const NavBarButton = ({
-  to,
-  title,
-}: {
-  to: string
-  title: string
-}) => {
-  const { pathname: currentPathname } = useLocation()
-  const isSelected = currentPathname === to
-  return (
-    <Link
-      to={to}
-      className={cn(
-        'flex items-center text-base font-semibold font-mono px-8',
-        isSelected
-          ? 'shadow-bottom-outline-black'
-          : 'hover:shadow-bottom-outline-grey',
-      )}
-    >
-      {title}
-    </Link>
-  )
-}
-
-const NavBarButtons = () => {
-  return (
-    <div className="flex h-full gap-2">
-      <NavBarButton to="/" title="bridge" />
-      <NavBarButton to="/chains" title="chains" />
-      <NavBarButton to="/message-passer" title="message passer" />
-    </div>
-  )
-}
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { Link } from "react-router-dom";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useConfig } from "@/stores/useConfig";
+import { sourceChainById, sourceChains } from "@superchain-tools/chains";
 
 export const NavBar = () => {
+  const { sourceChainId, setSourceChainId } = useConfig();
+
   return (
-    <div className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 h-16 flex items-center px-4 justify-between">
-      <Banner />
-      <NavBarButtons />
-      <ConnectButton />
+    <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 h-16 flex items-center px-4 justify-between">
+      <Link to="/" className="font-mono text-sm font-bold leading-none">
+        SUPERCHAIN TOOLS
+      </Link>
+      <div className="flex items-center gap-4 select-none">
+        <Select
+          value={sourceChainId.toString()}
+          onValueChange={(value) => setSourceChainId(parseInt(value))}
+        >
+          <SelectTrigger className="w-[200px]">
+            <SelectValue>
+              <span className="font-bold">L1:</span>{" "}
+              {sourceChainById[sourceChainId]?.name}
+            </SelectValue>
+          </SelectTrigger>
+          <SelectContent className="flex">
+            {sourceChains.map((chain) => (
+              <SelectItem
+                key={chain.id}
+                value={chain.id.toString()}
+                className="flex-1 w-full"
+              >
+                <div>{chain.name}</div>
+                <div className="text-muted-foreground text-xs">
+                  ID: {chain.id}
+                </div>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <ConnectButton chainStatus="none" />
+      </div>
     </div>
-  )
-}
+  );
+};

@@ -1,11 +1,15 @@
-import '@rainbow-me/rainbowkit/styles.css'
+import "@rainbow-me/rainbowkit/styles.css";
 
-import { envVars } from '@/envVars'
-import { supportedChains } from '@/supportedChains'
-import { getDefaultConfig } from '@rainbow-me/rainbowkit'
+import { envVars } from "@/envVars";
+import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 
-function removeDups<T>(names: T[], keyFn: (item: T) => any = (item) => item): T[] {
-  let unique: Map<any, T> = new Map();
+import { sourceChains, chains } from "@superchain-tools/chains";
+
+function removeDups<T>(
+  names: T[],
+  keyFn: (item: T) => any = (item) => item
+): T[] {
+  const unique: Map<any, T> = new Map();
   names.forEach((item) => {
     const key = keyFn(item);
     if (!unique.has(key)) {
@@ -16,7 +20,8 @@ function removeDups<T>(names: T[], keyFn: (item: T) => any = (item) => item): T[
 }
 
 export const config = getDefaultConfig({
-  appName: 'Superchain Testnet Tools',
+  appName: "Superchain Tools",
   projectId: envVars.VITE_WALLET_CONNECT_PROJECT_ID,
-  chains: removeDups(supportedChains, (chain) => chain.id),
-})
+  // @ts-expect-error
+  chains: [...sourceChains, ...chains],
+});

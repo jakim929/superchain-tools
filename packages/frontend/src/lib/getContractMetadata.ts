@@ -1,51 +1,52 @@
-import { envVars } from '@/envVars'
-import { useQuery } from '@tanstack/react-query'
-import { Address } from 'viem'
-import { z } from 'zod'
-import { Abi as AbiSchema } from 'abitype/zod'
-import { AddressSchema } from '@superchain-testnet-tools/common-ts'
+import { envVars } from "@/envVars";
+import { useQuery } from "@tanstack/react-query";
+import { Address } from "viem";
+import { z } from "zod";
+import { Abi as AbiSchema } from "abitype/zod";
+import { AddressSchema } from "@superchain-tools/common-ts";
 
-
-const ContractMetadataSchema = z.object({
-  source: z.enum(['etherscan', 'blockscout'] as const),
-  abi: AbiSchema,
-  implementationAddress: AddressSchema.nullable(),
-  name: z.string().nullable(),
-}).nullable()
+const ContractMetadataSchema = z
+  .object({
+    source: z.enum(["etherscan", "blockscout"] as const),
+    abi: AbiSchema,
+    implementationAddress: AddressSchema.nullable(),
+    name: z.string().nullable(),
+  })
+  .nullable();
 
 const getContractMetadataAbiQueryKey = ({
   chainId,
   address,
 }: {
-  chainId: number
-  address: Address
+  chainId: number;
+  address: Address;
 }) => {
-  return ['ContractMetadata', chainId, address]
-}
+  return ["ContractMetadata", chainId, address];
+};
 
 export const getContractMetadata = async ({
   chainId,
   address,
 }: {
-  chainId: number
-  address: Address
+  chainId: number;
+  address: Address;
 }) => {
   const result = await fetch(
-    `${envVars.VITE_CONTRACT_LOOKUP_SERVICE_URL}/contract-metadata/${chainId}/${address}`,
-  )
-  console.log('hello', result)
+    `${envVars.VITE_CONTRACT_LOOKUP_SERVICE_URL}/contract-metadata/${chainId}/${address}`
+  );
+  console.log("hello", result);
   if (result.status === 404) {
-    return null
+    return null;
   }
-  return ContractMetadataSchema.parse(await result.json())
-}
+  return ContractMetadataSchema.parse(await result.json());
+};
 
 export const useContractMetadata = ({
   chainId,
   address,
 }: {
-  chainId?: number
-  address?: Address
+  chainId?: number;
+  address?: Address;
 }) => {
   return useQuery({
     queryKey:
@@ -59,5 +60,5 @@ export const useContractMetadata = ({
       }),
     enabled: Boolean(address && chainId),
     staleTime: 6000_000,
-  })
-}
+  });
+};

@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": ["src"],
+  "compilerOptions": {
+    "target": "es2021",
+    "lib": ["esnext"],
+    "strict": true,
+    "composite": true,
+    "outDir": "types",
+    "emitDeclarationOnly": true
+  }
+}

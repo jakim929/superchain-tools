@@ -1,6 +1,12 @@
-import { OpStackChain, opStackChains } from '@superchain-testnet-tools/chains'
-import { Button, buttonVariants } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { chains, sourceChainById } from "@superchain-tools/chains";
 
 import {
   Table,
@@ -9,75 +15,110 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import { cn } from '@/lib/utils'
-import { useSwitchChain } from 'wagmi'
+} from "@/components/ui/table";
+import { cn } from "@/lib/utils";
+import { useSwitchChain } from "wagmi";
+import { Chain } from "viem";
+import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/components/ui/use-toast";
 
-const ChainRow = ({
-  chain,
-}: {
-  chain: OpStackChain
-}) => {
-  const { l1Chain, l2Chain } = chain
+const ChainRow = ({ chain }: { chain: Chain }) => {
+  const { switchChain } = useSwitchChain();
+  const sourceChain = sourceChainById[chain.sourceId!];
+  const { toast } = useToast();
 
-  const { switchChain } = useSwitchChain()
+  const copyChainId = (id: number) => {
+    navigator.clipboard.writeText(id.toString());
+    toast({
+      description: `Copied chain ID: ${id}`,
+    });
+  };
 
   return (
-    <TableRow>
+    <TableRow className="hover:bg-gray-100">
       <TableCell className="font-medium">
         <a
-          href={l2Chain.blockExplorers!.default.url}
+          href={chain.blockExplorers!.default.url}
           target="_blank"
           rel="noreferrer"
-          className={cn(buttonVariants({ variant: 'link' }), ' text-blue-600')}
+          className={cn(
+            buttonVariants({ variant: "link" }),
+            "px-0 text-primary hover:text-primary/80 underline"
+          )}
         >
-          {chain.l2Chain.name}
+          {chain.name}
         </a>
       </TableCell>
-      <TableCell>{l2Chain.id}</TableCell>
       <TableCell>
-        {l1Chain.name} ({l1Chain.id})
+        <Badge
+          variant="secondary"
+          className="font-mono cursor-pointer transition-transform hover:scale-105 active:scale-95 bg-gray-200 hover:bg-gray-800 hover:text-white"
+          onClick={() => copyChainId(chain.id)}
+        >
+          {chain.id}
+        </Badge>
       </TableCell>
-      <TableCell className="inline-flex justify-end">
+      <TableCell>
+        <Badge
+          variant="outline"
+          className="cursor-pointer transition-transform hover:scale-105 active:scale-95 bg-gray-200 hover:bg-gray-800 hover:text-white"
+          onClick={() => copyChainId(sourceChain.id)}
+        >
+          {sourceChain.name} ({sourceChain.id})
+        </Badge>
+      </TableCell>
+      <TableCell className="text-right">
         <Button
           size="sm"
           variant="outline"
-          onClick={() => switchChain?.({ chainId: l2Chain.id })}
+          onClick={() => switchChain?.({ chainId: chain.id })}
+          className="space-x-2"
         >
-          Add network
+          <span>Add network</span>
         </Button>
       </TableCell>
     </TableRow>
-  )
-}
+  );
+};
 
 export const ChainsPage = () => {
   return (
-    <div className="flex justify-center">
-      <Card className="w-[700px]">
+    <div className="container ">
+      <Card className="border-none shadow-none">
         <CardHeader>
-          <CardTitle>OP Stack Testnets</CardTitle>
+          <CardTitle className="text-3xl font-bold tracking-tight">
+            OP Stack Chains
+          </CardTitle>
+          <CardDescription>
+            Sourced from the{" "}
+            <a
+              href="https://github.com/ethereum-optimism/superchain-registry"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-primary hover:text-primary/80 underline underline-offset-4"
+            >
+              Superchain Registry
+            </a>
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="">
-                  <div className="px-4">Name</div>
-                </TableHead>
+                <TableHead>Name</TableHead>
                 <TableHead>Chain ID</TableHead>
                 <TableHead>Source chain</TableHead>
-                <TableHead>{''}</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {opStackChains.map((chain) => (
-                <ChainRow key={chain.l2Chain.id} chain={chain} />
+              {chains.map((chain) => (
+                <ChainRow key={chain.id} chain={chain} />
               ))}
             </TableBody>
           </Table>
         </CardContent>
       </Card>
     </div>
-  )
-}
+  );
+};

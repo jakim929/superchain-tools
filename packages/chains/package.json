@@ -1,5 +1,5 @@
 {
-  "name": "@superchain-testnet-tools/chains",
+  "name": "@superchain-tools/chains",
   "private": true,
   "version": "0.0.0",
   "main": "dist/index.js",
@@ -7,12 +7,18 @@
   "module": "dist/index.mjs",
   "license": "MIT",
   "scripts": {
-    "build": "tsup"
+    "build": "tsup",
+    "pull-superchain-registry": "tsx scripts/pullSuperchainRegistryChainList.ts && biome format ./src/generated/chainList.ts --write"
   },
   "dependencies": {
-    "viem": "^2.21.40"
+    "@eth-optimism/viem": "^0.0.12",
+    "abitype": "^0.8.11",
+    "viem": "^2.21.53",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
-    "tsup": "^7.2.0"
+    "@types/node": "^20.8.8",
+    "tsup": "^7.2.0",
+    "tsx": "^4.19.2"
   }
 }

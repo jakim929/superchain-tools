@@ -1,50 +1,39 @@
-import { BridgeCard } from '@/components/BridgeCard'
-import { Chain, sepolia } from 'viem/chains'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useAccount, useSwitchChain } from 'wagmi'
-
-const supportedSourceChains = [sepolia]
-
-const getTabKey = (currentChain?: Chain) => {
-  if (!currentChain) return supportedSourceChains[0].id.toString()
-
-  if (supportedSourceChains.some((chain) => chain.id === currentChain.id)) {
-    return currentChain.id.toString()
-  }
-
-  return supportedSourceChains[0].id.toString()
-}
+import { BridgeCard } from "@/components/BridgeCard";
+import { Chain } from "viem/chains";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { sourceChains } from "@superchain-tools/chains";
+import { useConfig } from "@/stores/useConfig";
 
 export const BridgePage = () => {
-  const { chain } = useAccount()
-  const { switchChain } = useSwitchChain()
+  const { sourceChainId, setSourceChainId } = useConfig();
+
   return (
     <div className="flex justify-center ">
       <Tabs
-        defaultValue={getTabKey()}
-        value={getTabKey(chain)}
+        defaultValue={sourceChainId.toString()}
+        value={sourceChainId.toString()}
         className="w-[400px]"
       >
         <TabsList className="w-full flex">
-          {supportedSourceChains.map((chain) => (
+          {sourceChains.map((sourceChain) => (
             <TabsTrigger
-              onClick={() => switchChain?.({ chainId: chain.id })}
-              className="flex-1"
-              key={chain.name}
-              value={chain.id.toString()}
+              onClick={() => setSourceChainId(sourceChain.id)}
+              className="flex-1 relative"
+              key={sourceChain.name}
+              value={sourceChain.id.toString()}
             >
-              {chain.name}
+              {sourceChain.name}
             </TabsTrigger>
           ))}
         </TabsList>
-        {supportedSourceChains.map((chain) => {
+        {sourceChains.map((chain) => {
           return (
             <TabsContent key={chain.name} value={chain.id.toString()}>
               <BridgeCard l1Chain={chain} />
             </TabsContent>
-          )
+          );
         })}
       </Tabs>
     </div>
-  )
-}
+  );
+};

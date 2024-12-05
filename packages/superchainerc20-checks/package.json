@@ -1,0 +1,18 @@
+{
+  "name": "@superchain-tools/superchainerc20-checks",
+  "version": "0.0.0",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "test": "vitest --passWithNoTests",
+    "typecheck": "tsc --noEmit",
+    "typecheck:ci": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "vitest": "^1.6.0"
+  },
+  "dependencies": {
+    "@eth-optimism/viem": "^0.0.11",
+    "viem": "^2.21.53"
+  }
+}
