@@ -1,21 +1,27 @@
 import { BridgeCard } from "@/components/BridgeCard";
-import { Chain } from "viem/chains";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { sourceChains } from "@superchain-tools/chains";
 import { useConfig } from "@/stores/useConfig";
+import { supersimL1 } from "@eth-optimism/viem";
+import { sepolia } from "viem/chains";
+import { AvailableNetworks } from "@/components/AvailableNetworks";
+
+const supportedSourceChains = [sepolia, supersimL1];
 
 export const BridgePage = () => {
   const { sourceChainId, setSourceChainId } = useConfig();
 
   return (
-    <div className="flex justify-center ">
+    <div className="flex flex-col gap-4 max-w-2xl mx-auto">
+      <AvailableNetworks
+        requiredSourceChainIds={supportedSourceChains.map((chain) => chain.id)}
+      />
       <Tabs
         defaultValue={sourceChainId.toString()}
         value={sourceChainId.toString()}
-        className="w-[400px]"
       >
         <TabsList className="w-full flex">
-          {sourceChains.map((sourceChain) => (
+          {supportedSourceChains.map((sourceChain) => (
             <TabsTrigger
               onClick={() => setSourceChainId(sourceChain.id)}
               className="flex-1 relative"
