@@ -1,6 +1,7 @@
 import { NavBarLayout } from "@/layouts/NavBarLayout";
 import { BridgePage } from "@/pages/BridgePage";
 import { ChainsPage } from "@/pages/ChainsPage";
+import { ConfigPage } from "@/pages/ConfigPage";
 import { L2ToL1RelayerPage } from "@/pages/L2ToL1RelayerPage";
 import { SuperchainERC20ChecksPage } from "@/pages/SuperchainERC20ChecksPage";
 import { SuperchainMessageRelayer } from "@/pages/SuperchainMessageRelayer";
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
       {
         path: "/superchain-message-relayer",
         element: <SuperchainMessageRelayer />,
+      },
+      {
+        path: "/config",
+        element: <ConfigPage />,
       },
     ],
   },

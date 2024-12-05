@@ -22,7 +22,13 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { CheckCircle2, XCircle, Loader2, AlertCircle } from "lucide-react";
+import {
+  CheckCircle2,
+  XCircle,
+  Loader2,
+  AlertCircle,
+  Wrench,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -53,11 +59,21 @@ import {
 import { ChevronUp, Pencil } from "lucide-react";
 import { chainById, chains, sourceChains } from "@superchain-tools/chains";
 import { useConfig } from "@/stores/useConfig";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-const checkQueriesForChain = (chain: Chain, address: Address) => [
+const checkQueriesForChain = (
+  chain: Chain,
+  address: Address,
+  rpcUrlOverride: string | undefined
+) => [
   {
     queryKey: ["contract-is-deployed", chain.id, address],
-    queryFn: () => checkIsContractDeployed({ chain }, address),
+    queryFn: () => checkIsContractDeployed({ chain, rpcUrlOverride }, address),
     meta: {
       queryKey: ["contract-is-deployed", chain.id, address],
       chainId: chain.id,
@@ -68,7 +84,8 @@ const checkQueriesForChain = (chain: Chain, address: Address) => [
 
   {
     queryKey: ["erc7802-compatibility", chain.id, address],
-    queryFn: () => checkSupportsERC7802Interface({ chain }, address),
+    queryFn: () =>
+      checkSupportsERC7802Interface({ chain, rpcUrlOverride }, address),
     meta: {
       queryKey: ["erc7802-compatibility", chain.id, address],
       chainId: chain.id,
@@ -79,7 +96,10 @@ const checkQueriesForChain = (chain: Chain, address: Address) => [
   {
     queryKey: ["bridge-minting", chain.id, address],
     queryFn: async () => {
-      return allowsSuperchainTokenBridgeToMint({ chain }, address);
+      return allowsSuperchainTokenBridgeToMint(
+        { chain, rpcUrlOverride },
+        address
+      );
     },
     meta: {
       queryKey: ["bridge-minting", chain.id, address],
@@ -90,7 +110,7 @@ const checkQueriesForChain = (chain: Chain, address: Address) => [
   },
   {
     queryKey: ["crosschain-mint-event", chain.id, address],
-    queryFn: () => emitsCrosschainMintEvent({ chain }, address),
+    queryFn: () => emitsCrosschainMintEvent({ chain, rpcUrlOverride }, address),
     meta: {
       queryKey: ["crosschain-mint-event", chain.id, address],
       chainId: chain.id,
@@ -101,7 +121,10 @@ const checkQueriesForChain = (chain: Chain, address: Address) => [
   {
     queryKey: ["bridge-burning", chain.id, address],
     queryFn: async () => {
-      return allowsSuperchainTokenBridgeToBurn({ chain }, address);
+      return allowsSuperchainTokenBridgeToBurn(
+        { chain, rpcUrlOverride },
+        address
+      );
     },
     meta: {
       queryKey: ["bridge-burning", chain.id, address],
@@ -113,7 +136,7 @@ const checkQueriesForChain = (chain: Chain, address: Address) => [
 
   {
     queryKey: ["crosschain-burn-event", chain.id, address],
-    queryFn: () => emitsCrosschainBurnEvent({ chain }, address),
+    queryFn: () => emitsCrosschainBurnEvent({ chain, rpcUrlOverride }, address),
     meta: {
       queryKey: ["crosschain-burn-event", chain.id, address],
       chainId: chain.id,
@@ -124,9 +147,10 @@ const checkQueriesForChain = (chain: Chain, address: Address) => [
 ];
 
 const useChecks = (chains: Chain[], address: Address) => {
+  const { rpcOverrideByChainId } = useConfig();
   const queryClient = useQueryClient();
   const queries = chains.flatMap((chain) =>
-    checkQueriesForChain(chain, address)
+    checkQueriesForChain(chain, address, rpcOverrideByChainId[chain.id])
   );
 
   const queryCountPerChain = queries.length / chains.length;
@@ -318,8 +342,6 @@ const Checks = () => {
 
   const checksResult = useChecks(chainsToCheck, address!);
 
-  console.log(checksResult);
-
   if (!address || !sourceChainId || !chainIds.length) {
     return null;
   }
@@ -368,6 +390,8 @@ export const SuperchainERC20ChecksPage = () => {
     sourceChainId: urlSourceChainId,
     chainIds,
   } = useCheckerParams();
+
+  const { rpcOverrideByChainId } = useConfig();
 
   const [error, setError] = useState<string | null>(null);
   const [address, setAddress] = useState(
@@ -502,24 +526,49 @@ export const SuperchainERC20ChecksPage = () => {
                         {chains
                           .filter((chain) => chain.sourceId === sourceChainId)
                           .map((chain) => (
-                            <Button
-                              key={chain.id}
-                              variant={
-                                selectedChainIds.includes(chain.id)
-                                  ? "default"
-                                  : "outline"
-                              }
-                              className="w-full justify-start"
-                              onClick={() => {
-                                setSelectedChainIds((prev) =>
-                                  prev.includes(chain.id)
-                                    ? prev.filter((id) => id !== chain.id)
-                                    : [...prev, chain.id]
-                                );
-                              }}
-                            >
-                              <span className="truncate">{chain.name}</span>
-                            </Button>
+                            <div key={chain.id} className="relative">
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      variant={
+                                        selectedChainIds.includes(chain.id)
+                                          ? "default"
+                                          : "outline"
+                                      }
+                                      className="w-full justify-start"
+                                      onClick={() => {
+                                        setSelectedChainIds((prev) =>
+                                          prev.includes(chain.id)
+                                            ? prev.filter(
+                                                (id) => id !== chain.id
+                                              )
+                                            : [...prev, chain.id]
+                                        );
+                                      }}
+                                    >
+                                      <span className="truncate">
+                                        {chain.name}
+                                      </span>
+                                      {rpcOverrideByChainId[chain.id] && (
+                                        <Wrench className="h-3 w-3 ml-1" />
+                                      )}
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    RPC overriden:{" "}
+                                    {rpcOverrideByChainId[chain.id]?.length > 50
+                                      ? `${rpcOverrideByChainId[chain.id].slice(
+                                          0,
+                                          25
+                                        )}...${rpcOverrideByChainId[
+                                          chain.id
+                                        ].slice(-25)}`
+                                      : rpcOverrideByChainId[chain.id]}
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </div>
                           ))}
                       </div>
                     </div>

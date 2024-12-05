@@ -1,17 +1,22 @@
 import { NavBar } from "@/components/NavBar";
 import { SideNav } from "@/components/SideNav";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { Outlet } from "react-router-dom";
 
 export const NavBarLayout = () => {
   return (
-    <div className="flex flex-col">
-      <NavBar />
-      <div className="flex flex-1">
-        <SideNav />
-        <main className="flex-1 p-8">
-          <Outlet />
-        </main>
+    <SidebarProvider className="flex-1 flex flex-col">
+      <div className="flex flex-col">
+        <div className="flex flex-1">
+          <SideNav />
+          <main className="flex flex-col flex-1">
+            <NavBar />
+            <div className="flex flex-1 flex-col p-8">
+              <Outlet />
+            </div>
+          </main>
+        </div>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };

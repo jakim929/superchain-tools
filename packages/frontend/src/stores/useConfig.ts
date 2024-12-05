@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { sepolia } from "viem/chains";
 import { sourceChainById } from "@superchain-tools/chains";
 
@@ -8,26 +9,34 @@ type Config = {
 
   setSourceChainId: (id: number) => void;
 
-  setRpcOverrideByChainId: (chainId: number, rpc: string) => void;
+  setRpcOverrideByChainId: (chainId: number, rpcUrl: string) => void;
 };
 
-export const useConfig = create<Config>((set, get) => ({
-  sourceChainId: sepolia.id,
-  rpcOverrideByChainId: {},
+export const useConfig = create<Config>()(
+  persist(
+    (set, get) => ({
+      sourceChainId: sepolia.id,
 
-  setSourceChainId: (id: number) => {
-    if (!sourceChainById[id]) {
-      throw new Error(`Source chain with id ${id} not supported`);
-    }
-    set({ sourceChainId: id });
-  },
+      rpcOverrideByChainId: {},
 
-  setRpcOverrideByChainId: (chainId: number, rpcUrl: string) => {
-    set({
-      rpcOverrideByChainId: {
-        ...get().rpcOverrideByChainId,
-        [chainId]: rpcUrl,
+      setSourceChainId: (id: number) => {
+        if (!sourceChainById[id]) {
+          throw new Error(`Source chain with id ${id} not supported`);
+        }
+        set({ sourceChainId: id });
       },
-    });
-  },
-}));
+
+      setRpcOverrideByChainId: (chainId: number, rpcUrl: string) => {
+        set({
+          rpcOverrideByChainId: {
+            ...get().rpcOverrideByChainId,
+            [chainId]: rpcUrl,
+          },
+        });
+      },
+    }),
+    {
+      name: "superchain-tools-storage",
+    }
+  )
+);

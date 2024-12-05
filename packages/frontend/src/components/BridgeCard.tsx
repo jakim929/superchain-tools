@@ -83,7 +83,7 @@ const NetworkSwitch = ({
   const { name, id } = chain;
   const formattedBalance = useFormattedBalance(id);
   return (
-    <button
+    <div
       type="button"
       className="w-full flex cursor-pointer hover:bg-muted/50 rounded-lg py-2 px-2 items-center"
       onClick={(e) => {
@@ -107,7 +107,7 @@ const NetworkSwitch = ({
           </div>
         )}
       </div>
-    </button>
+    </div>
   );
 };
 
