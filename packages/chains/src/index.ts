@@ -4,6 +4,17 @@ import { Chain } from "viem/chains";
 import { viemChainById } from "@/viemChainById";
 export { chainListLastUpdated } from "@/generated/chainList";
 
+export { superchainRegistryChains };
+
+export const superchainRegistrySourceChains: Chain[] = Array.from(
+  superchainRegistryChains.reduce((acc, chain) => {
+    if (chain.sourceId) {
+      acc.add(chain.sourceId);
+    }
+    return acc;
+  }, new Set<number>())
+).map((chainId) => viemChainById[chainId]);
+
 export const chains: Chain[] = [
   ...superchainRegistryChains,
   ...supersimChains,

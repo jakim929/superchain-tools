@@ -1,0 +1,23 @@
+{
+  "name": "rpc-proxy-worker",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --minify",
+    "update:rpc-bindings-file": "tsx scripts/generateRpcUrlBindings.ts && biome format ./src/generated/chainRpcUrlBindings.ts --write",
+    "update:rpc-secrets-file": "tsx scripts/generateRpcUrlSecretsJson.ts && biome format ./rpc-url-secrets.json --write",
+    "update:all": "pnpm update:rpc-bindings-file && pnpm update:rpc-secrets-file",
+    "generate:dev-vars": "tsx scripts/generateDevVars.ts",
+    "upload:rpc-secrets": "cat ./rpc-url-secrets.json | jq 'del(.[\"$schema\"])' | wrangler secret:bulk"
+  },
+  "dependencies": {
+    "@superchain-tools/chains": "workspace:*",
+    "hono": "^4.6.13",
+    "viem": "^2.21.53"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241112.0",
+    "@types/node": "^20.8.8",
+    "tsx": "^4.19.2",
+    "wrangler": "^3.88.0"
+  }
+}
