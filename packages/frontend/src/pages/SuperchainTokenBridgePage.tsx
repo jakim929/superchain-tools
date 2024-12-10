@@ -42,8 +42,17 @@ export const SuperchainTokenBridgePage = () => {
   const { address } = useAccount();
   const { sourceChainId, setSourceChainId } = useConfig();
   const [amount, setAmount] = useState("");
-  const [fromChainId, setFromChain] = useState<number>(0);
-  const [toChainId, setToChain] = useState<number>(0);
+
+  // Filter available chains based on source network
+  const filteredChains = sourceChainId
+    ? chains.filter((chain) => chain.sourceId === sourceChainId)
+    : [];
+
+  const [fromChainId, setFromChain] = useState<number>(
+    filteredChains[0]?.id || 0
+  );
+
+  const [toChainId, setToChain] = useState<number>(filteredChains[1]?.id || 0);
   const [tokenAddress, setTokenAddress] = useState<Address>(
     "0xAaA2b0D6295b91505500B7630e9E36a461ceAd1b"
   );
@@ -92,20 +101,13 @@ export const SuperchainTokenBridgePage = () => {
   });
 
   const handleFromChainChange = async (chainId: string) => {
-    try {
-      const numChainId = parseInt(chainId);
-      await switchChain({ chainId: numChainId });
-      setFromChain(numChainId);
-      if (numChainId === toChainId) {
-        const availableChains = chains.filter(
-          (chain) => chain.id !== numChainId
-        );
-        setToChain(availableChains[0]?.id || 0);
-      }
-      reset();
-    } catch (error) {
-      console.error("Failed to switch chain:", error);
+    const numChainId = parseInt(chainId);
+    setFromChain(numChainId);
+    if (numChainId === toChainId) {
+      const availableChains = chains.filter((chain) => chain.id !== numChainId);
+      setToChain(availableChains[0]?.id || 0);
     }
+    reset();
   };
 
   const { isLoading: isReceiptLoading, isSuccess: isReceiptSuccess } =
@@ -130,17 +132,6 @@ export const SuperchainTokenBridgePage = () => {
       setSourceChainId(sourceChains[0].id);
     }
   }, [sourceChainId, setSourceChainId]);
-
-  // Filter available chains based on source network
-  const filteredChains = sourceChainId
-    ? chains.filter((chain) => chain.sourceId === sourceChainId)
-    : [];
-
-  // Reset chain selections when source network changes
-  useEffect(() => {
-    setFromChain(0);
-    setToChain(0);
-  }, [sourceChainId]);
 
   const getButtonContent = () => {
     if (isSendPending) {
@@ -173,19 +164,6 @@ export const SuperchainTokenBridgePage = () => {
 
   return (
     <div className="flex flex-col gap-4 max-w-2xl mx-auto">
-      {isReceiptSuccess && (
-        <Alert className="border-green-500/50 bg-green-500/10">
-          <AlertDescription className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-green-500" />
-              <span>Transaction confirmed successfully!</span>
-            </div>
-            <Button variant="outline" size="sm" onClick={handleViewRelayer}>
-              View in Message Relayer
-            </Button>
-          </AlertDescription>
-        </Alert>
-      )}
       <AvailableNetworks
         requiredSourceChainIds={supportedSourceChains.map((chain) => chain.id)}
       />
@@ -282,7 +260,9 @@ export const SuperchainTokenBridgePage = () => {
             className="w-full"
             size="lg"
             disabled={isButtonDisabled}
-            onClick={() => {
+            onClick={async () => {
+              await switchChain({ chainId: fromChainId });
+
               writeContract(simulationResult.data!.request);
             }}
           >
@@ -290,6 +270,19 @@ export const SuperchainTokenBridgePage = () => {
           </Button>
         </CardContent>
       </Card>
+      {isReceiptSuccess && (
+        <Alert className="border-green-500/50 bg-green-500/10">
+          <AlertDescription className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-green-500" />
+              <span>Transaction confirmed successfully!</span>
+            </div>
+            <Button variant="outline" size="sm" onClick={handleViewRelayer}>
+              View in Message Relayer
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
     </div>
   );
 };
