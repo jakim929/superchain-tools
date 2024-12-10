@@ -40,13 +40,6 @@ import {
 import { Address, Chain } from "viem";
 import { fromZodError } from "zod-validation-error";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   useNavigate,
   useSearchParams,
   createSearchParams,
@@ -57,7 +50,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ChevronUp, Pencil } from "lucide-react";
-import { chainById, chains, sourceChains } from "@superchain-tools/chains";
+import { chainById, chains } from "@superchain-tools/chains";
 import { useConfig } from "@/stores/useConfig";
 import {
   Tooltip,
@@ -225,7 +218,7 @@ const ChainChecks = ({
   return (
     <AccordionItem value={chain.name}>
       <AccordionTrigger className="px-6">
-        <div className="flex justify-between items-center w-full">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center w-full gap-2">
           <div className="flex items-center gap-2">
             <span className="text-lg font-semibold">{chain.name}</span>
             <span className="text-sm text-muted-foreground">({chain.id})</span>
@@ -385,7 +378,7 @@ const Checks = () => {
 
 export const SuperchainERC20ChecksPage = () => {
   const navigate = useNavigate();
-  const { sourceChainId, setSourceChainId } = useConfig();
+  const { sourceChainId } = useConfig();
   const {
     address: urlAddress,
     sourceChainId: urlSourceChainId,
@@ -438,151 +431,145 @@ export const SuperchainERC20ChecksPage = () => {
   };
 
   return (
-    <div className="min-h-screen ">
-      <div className="max-w-2xl mx-auto space-y-6">
-        <Card>
-          <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-            <CollapsibleTrigger asChild className="w-full">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 py-6 px-6 hover:bg-slate-50 transition-colors cursor-pointer rounded-xl">
-                <div className="space-y-1.5">
-                  <CardTitle>SuperchainERC20 Checker</CardTitle>
-                  <CardDescription>
-                    Verify if your ERC20 token implementation is compatible with
-                    the Superchain bridge
-                  </CardDescription>
+    <div className="flex flex-col gap-8 w-full max-w-3xl mx-auto px-4 sm:px-6 py-8">
+      <Card>
+        <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+          <CollapsibleTrigger asChild className="w-full">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 py-6 px-6 hover:bg-slate-50 transition-colors cursor-pointer rounded-xl">
+              <div className="space-y-1.5">
+                <CardTitle>SuperchainERC20 Checker</CardTitle>
+                <CardDescription>
+                  Verify if your ERC20 token implementation is compatible with
+                  the Superchain bridge
+                </CardDescription>
+              </div>
+              {urlAddress && (
+                <div className="shrink-0 ml-4 text-muted-foreground">
+                  {isOpen ? (
+                    <ChevronUp className="h-4 w-4" />
+                  ) : (
+                    <Pencil className="h-4 w-4" />
+                  )}
                 </div>
-                {urlAddress && (
-                  <div className="shrink-0 ml-4 text-muted-foreground">
-                    {isOpen ? (
-                      <ChevronUp className="h-4 w-4" />
-                    ) : (
-                      <Pencil className="h-4 w-4" />
-                    )}
+              )}
+            </CardHeader>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="transition-all data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
+            <CardContent className="px-6 pb-6">
+              <div className="space-y-6">
+                <NetworkPicker />
+
+                {sourceChainId && (
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <label className="text-sm font-medium">
+                        Select Chains
+                      </label>
+                      <div className="space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            setSelectedChainIds(
+                              chains
+                                .filter(
+                                  (chain) => chain.sourceId === sourceChainId
+                                )
+                                .map((chain) => chain.id)
+                            )
+                          }
+                        >
+                          Select All
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setSelectedChainIds([])}
+                        >
+                          Select None
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                      {chains
+                        .filter((chain) => chain.sourceId === sourceChainId)
+                        .map((chain) => (
+                          <div key={chain.id} className="relative">
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    variant={
+                                      selectedChainIds.includes(chain.id)
+                                        ? "default"
+                                        : "outline"
+                                    }
+                                    className="w-full justify-start"
+                                    onClick={() => {
+                                      setSelectedChainIds((prev) =>
+                                        prev.includes(chain.id)
+                                          ? prev.filter((id) => id !== chain.id)
+                                          : [...prev, chain.id]
+                                      );
+                                    }}
+                                  >
+                                    <span className="truncate">
+                                      {chain.name}
+                                    </span>
+                                    {rpcOverrideByChainId[chain.id] && (
+                                      <Wrench className="h-3 w-3 ml-1" />
+                                    )}
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  RPC overriden:{" "}
+                                  {rpcOverrideByChainId[chain.id]?.length > 50
+                                    ? `${rpcOverrideByChainId[chain.id].slice(
+                                        0,
+                                        25
+                                      )}...${rpcOverrideByChainId[
+                                        chain.id
+                                      ].slice(-25)}`
+                                    : rpcOverrideByChainId[chain.id]}
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </div>
+                        ))}
+                    </div>
                   </div>
                 )}
-              </CardHeader>
-            </CollapsibleTrigger>
-            <CollapsibleContent className="transition-all data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
-              <CardContent className="px-6 pb-6">
-                <div className="space-y-6">
-                  <NetworkPicker />
 
-                  {sourceChainId && (
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center mb-2">
-                        <label className="text-sm font-medium">
-                          Select Chains
-                        </label>
-                        <div className="space-x-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() =>
-                              setSelectedChainIds(
-                                chains
-                                  .filter(
-                                    (chain) => chain.sourceId === sourceChainId
-                                  )
-                                  .map((chain) => chain.id)
-                              )
-                            }
-                          >
-                            Select All
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setSelectedChainIds([])}
-                          >
-                            Select None
-                          </Button>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {chains
-                          .filter((chain) => chain.sourceId === sourceChainId)
-                          .map((chain) => (
-                            <div key={chain.id} className="relative">
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Button
-                                      variant={
-                                        selectedChainIds.includes(chain.id)
-                                          ? "default"
-                                          : "outline"
-                                      }
-                                      className="w-full justify-start"
-                                      onClick={() => {
-                                        setSelectedChainIds((prev) =>
-                                          prev.includes(chain.id)
-                                            ? prev.filter(
-                                                (id) => id !== chain.id
-                                              )
-                                            : [...prev, chain.id]
-                                        );
-                                      }}
-                                    >
-                                      <span className="truncate">
-                                        {chain.name}
-                                      </span>
-                                      {rpcOverrideByChainId[chain.id] && (
-                                        <Wrench className="h-3 w-3 ml-1" />
-                                      )}
-                                    </Button>
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    RPC overriden:{" "}
-                                    {rpcOverrideByChainId[chain.id]?.length > 50
-                                      ? `${rpcOverrideByChainId[chain.id].slice(
-                                          0,
-                                          25
-                                        )}...${rpcOverrideByChainId[
-                                          chain.id
-                                        ].slice(-25)}`
-                                      : rpcOverrideByChainId[chain.id]}
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
-                            </div>
-                          ))}
-                      </div>
-                    </div>
-                  )}
+                <form
+                  onSubmit={handleAddressSubmit}
+                  className="flex flex-col gap-3"
+                >
+                  <div className="flex gap-3">
+                    <Input
+                      type="text"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      placeholder="Enter contract address"
+                      className="flex-grow"
+                    />
+                    <Button
+                      type="submit"
+                      disabled={
+                        selectedChainIds.length === 0 || !hasParamsChanged()
+                      }
+                    >
+                      Check
+                    </Button>
+                  </div>
+                  {error && <p className="text-sm text-destructive">{error}</p>}
+                </form>
+              </div>
+            </CardContent>
+          </CollapsibleContent>
+        </Collapsible>
+      </Card>
 
-                  <form
-                    onSubmit={handleAddressSubmit}
-                    className="flex flex-col gap-3"
-                  >
-                    <div className="flex gap-3">
-                      <Input
-                        type="text"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                        placeholder="Enter contract address"
-                        className="flex-grow"
-                      />
-                      <Button
-                        type="submit"
-                        disabled={
-                          selectedChainIds.length === 0 || !hasParamsChanged()
-                        }
-                      >
-                        Check
-                      </Button>
-                    </div>
-                    {error && (
-                      <p className="text-sm text-destructive">{error}</p>
-                    )}
-                  </form>
-                </div>
-              </CardContent>
-            </CollapsibleContent>
-          </Collapsible>
-        </Card>
-
-        <Checks />
-      </div>
+      <Checks />
     </div>
   );
 };

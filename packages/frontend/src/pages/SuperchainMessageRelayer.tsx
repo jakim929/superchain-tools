@@ -58,7 +58,7 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const SuperchainMessageRelayer = () => {
   return (
-    <div className="flex flex-col gap-8 max-w-3xl mx-auto py-8">
+    <div className="flex flex-col gap-8 w-full max-w-3xl mx-auto px-4 sm:px-6 py-8">
       <div className="space-y-2">
         <h1 className="text-3xl font-bold">Superchain Message Relayer</h1>
         <p className="text-muted-foreground text-sm max-w-prose">
@@ -110,7 +110,7 @@ const Relayer = () => {
   const hasRecentTransactions = recentTransactions.length > 0;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 sm:gap-6">
       {/* STEP 1: SELECT CHAIN AND TRANSACTION */}
       <Card className="border rounded-lg">
         <CardHeader className="pb-3">
@@ -181,7 +181,7 @@ const TransactionHashInput = ({
       <Label htmlFor="txHash" className="text-sm font-medium">
         Transaction Hash
       </Label>
-      <div className="relative">
+      <div className="relative w-full">
         <Input
           id="txHash"
           placeholder="0x..."
@@ -192,7 +192,7 @@ const TransactionHashInput = ({
               txHash: e.target.value,
             })
           }
-          className="font-mono"
+          className="font-mono w-full text-sm sm:text-base"
         />
         {txHashInputValue && !isValidTxHash && (
           <p className="text-sm text-destructive mt-1.5">
@@ -384,15 +384,15 @@ const TransactionSummaryCard = ({
   const [isExpanded, setIsExpanded] = useState(isReceiptExpandedDefault);
 
   return (
-    <Card className="border rounded-lg">
+    <Card className="border rounded-lg w-full">
       <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
         <CollapsibleTrigger asChild>
-          <button className="w-full p-4 flex items-center justify-between hover:bg-accent/50 transition-colors rounded-t-lg text-left">
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center gap-2 font-medium text-base">
+          <button className="w-full p-3 sm:p-4 flex items-center justify-between hover:bg-accent/50 transition-colors rounded-t-lg text-left">
+            <div className="flex flex-col gap-1 overflow-hidden">
+              <div className="flex items-center gap-2 font-medium text-sm sm:text-base overflow-hidden">
                 Transaction
-                <code className="text-sm font-normal text-muted-foreground">
-                  {`${txHash.slice(0, 10)}...${txHash.slice(-8)}`}
+                <code className="text-xs sm:text-sm font-normal text-muted-foreground truncate">
+                  {`${txHash.slice(0, 6)}...${txHash.slice(-6)}`}
                 </code>
               </div>
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
