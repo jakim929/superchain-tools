@@ -154,7 +154,7 @@ const TransactionHashInput = ({
   recentTransactions: any[];
   hasRecentTransactions: boolean;
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const isValidTxHash = isHash(txHashInputValue);
 
   return (
