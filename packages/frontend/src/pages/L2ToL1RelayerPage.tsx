@@ -47,7 +47,7 @@ export const L2ToL1RelayerPage = () => {
   >();
 
   return (
-    <div className="flex flex-col gap-4 max-w-2xl mx-auto">
+    <div className="flex flex-col gap-8 w-full max-w-3xl mx-auto px-4 sm:px-6 py-8">
       <AvailableNetworks
         requiredSourceChainIds={supportedSourceChains.map((chain) => chain.id)}
       />
