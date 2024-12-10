@@ -19,20 +19,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { chainById, chains, sourceChains } from "@superchain-tools/chains";
+import { chainById, sourceChains } from "@superchain-tools/chains";
 import { useConfig } from "@/stores/useConfig";
 import { AvailableNetworks } from "@/components/AvailableNetworks";
 import { Label } from "@/components/ui/label";
+import { NetworkPicker } from "@/components/NetworkPicker";
+import { L2ChainPicker } from "@/components/L2ChainPicker";
 
 // supersim doesn't support L2 to L1 withdrawals
 const supportedSourceChains = sourceChains.filter(
@@ -40,7 +35,7 @@ const supportedSourceChains = sourceChains.filter(
 );
 
 export const L2ToL1RelayerPage = () => {
-  const { sourceChainId, setSourceChainId } = useConfig();
+  const { sourceChainId } = useConfig();
   const [selectedL2ChainId, setSelectedL2ChainId] = useState<number | null>(
     optimismSepolia.id
   );
@@ -50,10 +45,6 @@ export const L2ToL1RelayerPage = () => {
   const [selectedTransactionHash, setSelectedTransactionHash] = useState<
     Hash | undefined
   >();
-
-  const filteredL2Chains = sourceChainId
-    ? chains.filter((chain) => chain.sourceId === sourceChainId)
-    : [];
 
   return (
     <div className="flex flex-col gap-4 max-w-2xl mx-auto">
@@ -71,49 +62,14 @@ export const L2ToL1RelayerPage = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-col gap-4 sm:flex-row">
-            <div className="space-y-4">
-              <Label>Select L1 Chain</Label>
-              <Select
-                value={sourceChainId?.toString()}
-                onValueChange={(value) => {
-                  setSourceChainId(Number(value));
-                  setSelectedL2ChainId(null); // Reset L2 chain selection
-                }}
-              >
-                <SelectTrigger className="w-full sm:w-[200px]">
-                  <SelectValue placeholder="Select Source Chain" />
-                </SelectTrigger>
-                <SelectContent>
-                  {supportedSourceChains.map((chain) => (
-                    <SelectItem key={chain.id} value={chain.id.toString()}>
-                      {chain.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <NetworkPicker />
 
             {sourceChainId && (
-              <div className="space-y-4">
-                <Label>Select L2 Chain</Label>
-                <Select
-                  value={selectedL2ChainId?.toString()}
-                  onValueChange={(value) => {
-                    setSelectedL2ChainId(Number(value));
-                  }}
-                >
-                  <SelectTrigger className="w-full sm:w-[200px]">
-                    <SelectValue placeholder="Select L2 Chain" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {filteredL2Chains.map((chain) => (
-                      <SelectItem key={chain.id} value={chain.id.toString()}>
-                        {chain.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              <L2ChainPicker
+                label="Select L2 Chain"
+                chainId={selectedL2ChainId ?? undefined}
+                onChange={setSelectedL2ChainId}
+              />
             )}
           </div>
 

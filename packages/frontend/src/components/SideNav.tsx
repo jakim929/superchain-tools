@@ -7,6 +7,7 @@ import {
   MessageSquare,
   Settings,
   Github,
+  FileCode,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -97,6 +98,11 @@ export const SideNav = () => {
                 to="/superchain-message-relayer"
                 title="Superchain Message Relayer"
                 icon={MessageSquare}
+              />
+              <NavItem
+                to="/contracts"
+                title="Superchain Contracts"
+                icon={FileCode}
               />
             </SidebarMenu>
           </SidebarGroupContent>

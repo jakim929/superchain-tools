@@ -1,5 +1,5 @@
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
+import { ConnectWalletButton } from "@/components/ConnectWalletButton";
 
 export const NavBar = () => {
   const { isMobile } = useSidebar();
@@ -7,7 +7,7 @@ export const NavBar = () => {
     <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 h-16 flex justify-between items-center px-4">
       {isMobile ? <SidebarTrigger className="" /> : <div />}
       <div className="flex items-center gap-4 select-none">
-        <ConnectButton chainStatus="none" />
+        <ConnectWalletButton />
       </div>
     </div>
   );

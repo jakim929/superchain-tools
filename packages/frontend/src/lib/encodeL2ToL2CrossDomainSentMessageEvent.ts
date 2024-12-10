@@ -1,0 +1,43 @@
+import {
+  Address,
+  encodeAbiParameters,
+  encodeEventTopics,
+  encodePacked,
+  Hex,
+  toHex,
+} from "viem";
+import { l2ToL2CrossDomainMessengerABI } from "@eth-optimism/viem";
+import { L2ToL2CrossDomainMessage } from "@/types/L2ToL2CrossDomainMessage";
+
+export const encodeL2ToL2CrossDomainSentMessageEvent = (
+  message: L2ToL2CrossDomainMessage
+) => {
+  const topics = encodeEventTopics({
+    abi: l2ToL2CrossDomainMessengerABI,
+    eventName: "SentMessage",
+    args: {
+      destination: message.destination,
+      target: message.target,
+      messageNonce: message.messageNonce,
+    },
+  });
+
+  const data = encodeAbiParameters(
+    [{ type: "address" }, { type: "bytes" }],
+    [message.sender, message.message]
+  );
+
+  if (topics === null || !Array.isArray(topics)) {
+    throw new Error("Failed to encode event topics");
+  }
+
+  // TODO: MAYBE is a bug in viem? but prob not. either way when messageNonce is 0n, the topic is null
+  if (topics[3] === null) {
+    topics[3] = toHex(message.messageNonce, { size: 32 });
+  }
+
+  return encodePacked(
+    ["bytes32[]", "bytes"],
+    [topics as `0x${string}`[], data]
+  );
+};

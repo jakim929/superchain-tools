@@ -31,6 +31,8 @@ import {
 } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { AvailableNetworks } from "@/components/AvailableNetworks";
+import { useTransactionStore } from "@/stores/useTransactionStore";
+import { NetworkPicker } from "@/components/NetworkPicker";
 
 const supportedSourceChains = [supersimL1];
 
@@ -43,6 +45,8 @@ export const SuperchainTokenBridgePage = () => {
   const [tokenAddress, setTokenAddress] = useState<Address>(
     "0xAaA2b0D6295b91505500B7630e9E36a461ceAd1b"
   );
+
+  const { addTransaction } = useTransactionStore();
 
   const {
     symbol,
@@ -74,7 +78,16 @@ export const SuperchainTokenBridgePage = () => {
     isPending: isSendPending,
     writeContract,
     reset,
-  } = useWriteContract();
+  } = useWriteContract({
+    mutation: {
+      onSuccess: (hash) => {
+        addTransaction({
+          hash,
+          chainId: fromChainId,
+        });
+      },
+    },
+  });
 
   const handleFromChainChange = async (chainId: string) => {
     try {
@@ -138,28 +151,7 @@ export const SuperchainTokenBridgePage = () => {
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-4">
-            <div className="space-y-2">
-              <Label>L1 Network</Label>
-              <Select
-                value={sourceChainId?.toString()}
-                onValueChange={(value) => {
-                  setSourceChainId(parseInt(value));
-                  setFromChain(0); // Reset from chain selection
-                  setToChain(0); // Reset to chain selection
-                }}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select L1 network" />
-                </SelectTrigger>
-                <SelectContent>
-                  {supportedSourceChains.map((chain) => (
-                    <SelectItem key={chain.id} value={chain.id.toString()}>
-                      {chain.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <NetworkPicker />
 
             <div className="space-y-2">
               <div className="flex justify-between items-center">

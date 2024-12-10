@@ -65,6 +65,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { NetworkPicker } from "@/components/NetworkPicker";
 
 const checkQueriesForChain = (
   chain: Chain,
@@ -464,32 +465,7 @@ export const SuperchainERC20ChecksPage = () => {
             <CollapsibleContent className="transition-all data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
               <CardContent className="px-6 pb-6">
                 <div className="space-y-6">
-                  <div className="space-y-4">
-                    <label className="text-sm font-medium">
-                      Select Network
-                    </label>
-                    <Select
-                      value={sourceChainId?.toString()}
-                      onValueChange={(value) => {
-                        setSourceChainId(parseInt(value));
-                        setSelectedChainIds([]);
-                      }}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a network" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {sourceChains.map((chain) => (
-                          <SelectItem
-                            key={chain.id}
-                            value={chain.id.toString()}
-                          >
-                            {chain.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  <NetworkPicker />
 
                   {sourceChainId && (
                     <div className="space-y-4">
