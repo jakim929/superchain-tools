@@ -29,7 +29,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Loader2, Send } from "lucide-react";
 import { AvailableNetworks } from "@/components/AvailableNetworks";
 import { useTransactionStore } from "@/stores/useTransactionStore";
 import { NetworkPicker } from "@/components/NetworkPicker";
@@ -139,6 +139,26 @@ export const SuperchainTokenBridgePage = () => {
     setToChain(0);
   }, [sourceChainId]);
 
+  const getButtonContent = () => {
+    if (isSendPending) {
+      return (
+        <>
+          <span className="mr-2">Sending transaction...</span>
+          <Send className="h-4 w-4 animate-pulse" />
+        </>
+      );
+    }
+    if (isReceiptLoading) {
+      return (
+        <>
+          <span className="mr-2">Waiting for confirmation...</span>
+          <Loader2 className="h-4 w-4 animate-spin" />
+        </>
+      );
+    }
+    return "Bridge";
+  };
+
   return (
     <div className="flex flex-col gap-4 max-w-2xl mx-auto">
       <AvailableNetworks
@@ -241,14 +261,7 @@ export const SuperchainTokenBridgePage = () => {
               writeContract(simulationResult.data!.request);
             }}
           >
-            {isSendPending || isReceiptLoading ? (
-              <>
-                <span className="mr-2">Bridging...</span>
-                <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-              </>
-            ) : (
-              "Bridge"
-            )}
+            {getButtonContent()}
           </Button>
         </CardContent>
       </Card>
