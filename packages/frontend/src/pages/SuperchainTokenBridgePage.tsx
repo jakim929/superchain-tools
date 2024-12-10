@@ -29,10 +29,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Loader2, Send } from "lucide-react";
+import { Loader2, Send, CheckCircle2 } from "lucide-react";
 import { AvailableNetworks } from "@/components/AvailableNetworks";
 import { useTransactionStore } from "@/stores/useTransactionStore";
 import { NetworkPicker } from "@/components/NetworkPicker";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useNavigate } from "react-router-dom";
 
 const supportedSourceChains = [supersimL1];
 
@@ -106,9 +108,10 @@ export const SuperchainTokenBridgePage = () => {
     }
   };
 
-  const { isLoading: isReceiptLoading } = useWaitForTransactionReceipt({
-    hash,
-  });
+  const { isLoading: isReceiptLoading, isSuccess: isReceiptSuccess } =
+    useWaitForTransactionReceipt({
+      hash,
+    });
 
   const isLoading =
     isSendPending || isReceiptLoading || !simulationResult.data?.request;
@@ -159,8 +162,30 @@ export const SuperchainTokenBridgePage = () => {
     return "Bridge";
   };
 
+  const navigate = useNavigate();
+
+  // Add handler for navigation
+  const handleViewRelayer = () => {
+    navigate(
+      `/superchain-message-relayer?chainId=${fromChainId}&txHash=${hash}`
+    );
+  };
+
   return (
     <div className="flex flex-col gap-4 max-w-2xl mx-auto">
+      {isReceiptSuccess && (
+        <Alert className="border-green-500/50 bg-green-500/10">
+          <AlertDescription className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-green-500" />
+              <span>Transaction confirmed successfully!</span>
+            </div>
+            <Button variant="outline" size="sm" onClick={handleViewRelayer}>
+              View in Message Relayer
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
       <AvailableNetworks
         requiredSourceChainIds={supportedSourceChains.map((chain) => chain.id)}
       />

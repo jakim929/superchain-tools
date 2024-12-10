@@ -32,7 +32,7 @@ import { AvailableNetworks } from "@/components/AvailableNetworks";
 import { DecodedMessageData } from "@/components/DecodedMessageData";
 import { useTransactionStore } from "@/stores/useTransactionStore";
 
-import { Address, Hash, Hex, isHash, Log, parseEventLogs } from "viem";
+import { Hash, Hex, isHash, Log, parseEventLogs } from "viem";
 
 import {
   useBlock,
@@ -52,6 +52,7 @@ import { predeployByContractAddress } from "@/constants/predeployByContractAddre
 import { getL2ToL2CrossDomainMessageHash } from "@/lib/getL2ToL2CrossDomainMessageHash";
 import { encodeL2ToL2CrossDomainSentMessageEvent } from "@/lib/encodeL2ToL2CrossDomainSentMessageEvent";
 import { L2ToL2CrossDomainMessage } from "@/types/L2ToL2CrossDomainMessage";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -75,15 +76,34 @@ export const SuperchainMessageRelayer = () => {
 };
 
 const Relayer = () => {
-  const [selectedL2ChainId, setSelectedL2ChainId] = useState<
-    number | undefined
-  >(supersimL2A.id);
-  const [txHashInputValue, setTxHashInputValue] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  // Get values from URL params, fallback to defaults
+  const selectedL2ChainId = searchParams.get("chainId")
+    ? Number(searchParams.get("chainId"))
+    : supersimL2A.id;
+  const txHashInputValue = searchParams.get("txHash") ?? "";
+
+  const updateParams = (params: { chainId: number; txHash: string }) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("chainId", params.chainId.toString());
+
+    if (params.txHash) {
+      newParams.set("txHash", params.txHash);
+    } else {
+      newParams.delete("txHash");
+    }
+
+    setSearchParams(newParams);
+  };
+
   const transactionEntryByHash = useTransactionStore(
     (state) => state.transactionEntryByHash
   );
 
-  const isValidTxHash = isHash(txHashInputValue);
+  const isValidTxHash =
+    txHashInputValue.length === 66 && isHash(txHashInputValue);
   const txHash = isValidTxHash ? txHashInputValue : undefined;
 
   const recentTransactions = Object.values(transactionEntryByHash);
@@ -107,26 +127,21 @@ const Relayer = () => {
             <L2ChainPicker
               label="Select L2 Chain"
               chainId={selectedL2ChainId}
-              onChange={(chainId) => {
-                setSelectedL2ChainId(chainId);
-                setTxHashInputValue("");
-              }}
+              onChange={(chainId) => updateParams({ chainId, txHash: "" })}
             />
           </div>
 
           <TransactionHashInput
             txHashInputValue={txHashInputValue}
-            setTxHashInputValue={setTxHashInputValue}
             selectedL2ChainId={selectedL2ChainId}
-            setSelectedL2ChainId={setSelectedL2ChainId}
+            updateParams={updateParams}
             recentTransactions={recentTransactions}
             hasRecentTransactions={hasRecentTransactions}
           />
         </CardContent>
       </Card>
 
-      {/* STEP 2 & 3: SHOW RESULTS IF TX IS VALID */}
-      {txHash && selectedL2ChainId && (
+      {isValidTxHash && txHash && selectedL2ChainId && (
         <>
           <Separator className="my-6" />
           <TransactionDetails
@@ -139,23 +154,27 @@ const Relayer = () => {
   );
 };
 
+type UpdateParamsFunction = (params: {
+  chainId: number;
+  txHash: string;
+}) => void;
+
 const TransactionHashInput = ({
   txHashInputValue,
-  setTxHashInputValue,
   selectedL2ChainId,
-  setSelectedL2ChainId,
+  updateParams,
   recentTransactions,
   hasRecentTransactions,
 }: {
   txHashInputValue: string;
-  setTxHashInputValue: (val: string) => void;
-  selectedL2ChainId?: number;
-  setSelectedL2ChainId: (val: number) => void;
+  selectedL2ChainId: number;
+  updateParams: UpdateParamsFunction;
   recentTransactions: any[];
   hasRecentTransactions: boolean;
 }) => {
   const [isOpen, setIsOpen] = useState(true);
-  const isValidTxHash = isHash(txHashInputValue);
+  const isValidTxHash =
+    txHashInputValue.length === 66 && isHash(txHashInputValue);
 
   return (
     <div className="grid w-full items-center gap-2">
@@ -167,7 +186,12 @@ const TransactionHashInput = ({
           id="txHash"
           placeholder="0x..."
           value={txHashInputValue}
-          onChange={(e) => setTxHashInputValue(e.target.value)}
+          onChange={(e) =>
+            updateParams({
+              chainId: selectedL2ChainId,
+              txHash: e.target.value,
+            })
+          }
           className="font-mono"
         />
         {txHashInputValue && !isValidTxHash && (
@@ -202,9 +226,8 @@ const TransactionHashInput = ({
               <RecentTransactionsList
                 recentTransactions={recentTransactions}
                 selectedL2ChainId={selectedL2ChainId}
-                setSelectedL2ChainId={setSelectedL2ChainId}
+                updateParams={updateParams}
                 txHashInputValue={txHashInputValue}
-                setTxHashInputValue={setTxHashInputValue}
               />
             </div>
           </CollapsibleContent>
@@ -217,25 +240,15 @@ const TransactionHashInput = ({
 const RecentTransactionsList = ({
   recentTransactions,
   selectedL2ChainId,
-  setSelectedL2ChainId,
+  updateParams,
   txHashInputValue,
-  setTxHashInputValue,
 }: {
   recentTransactions: any[];
-  selectedL2ChainId?: number;
-  setSelectedL2ChainId: (val: number) => void;
+  selectedL2ChainId: number;
+  updateParams: UpdateParamsFunction;
   txHashInputValue: string;
-  setTxHashInputValue: (val: string) => void;
 }) => {
   const filtered = recentTransactions.slice(0, 5);
-
-  if (filtered.length === 0) {
-    return (
-      <div className="p-3 text-sm text-muted-foreground">
-        No recent transactions for this chain.
-      </div>
-    );
-  }
 
   return (
     <div className="divide-y">
@@ -243,10 +256,12 @@ const RecentTransactionsList = ({
         <button
           type="button"
           key={tx.hash}
-          onClick={() => {
-            setTxHashInputValue(tx.hash);
-            setSelectedL2ChainId(tx.chainId);
-          }}
+          onClick={() =>
+            updateParams({
+              chainId: tx.chainId,
+              txHash: tx.hash,
+            })
+          }
           className={cn(
             "group w-full flex items-center justify-between px-3 py-2 gap-2 text-left hover:bg-accent/60",
             tx.hash === txHashInputValue

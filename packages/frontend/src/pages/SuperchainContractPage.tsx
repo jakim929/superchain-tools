@@ -4,8 +4,7 @@ import { useRecentAddressStore } from "@/stores/useRecentAddressStore";
 import { Address, isAddress } from "viem";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, HardHat } from "lucide-react";
+import { ConstructionAlert } from "@/components/ConstructionAlert";
 
 export const SuperchainContractPage = () => {
   const { recentAddresses, addAddress } = useRecentAddressStore((state) => {
@@ -21,14 +20,7 @@ export const SuperchainContractPage = () => {
 
   return (
     <div className="flex flex-col gap-4 p-4">
-      <Alert>
-        <HardHat className="h-4 w-4" />
-        <AlertTitle>Under construction</AlertTitle>
-        <AlertDescription>
-          This page is still a work in progress.
-        </AlertDescription>
-      </Alert>
-
+      <ConstructionAlert />
       <Input
         placeholder="Enter contract address"
         className="w-full"

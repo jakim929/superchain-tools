@@ -350,7 +350,7 @@ const Checks = () => {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <div>
+        <div className="space-y-4">
           <CardTitle>Compatibility Results</CardTitle>
           <CardDescription>
             Expand each chain to see detailed results
