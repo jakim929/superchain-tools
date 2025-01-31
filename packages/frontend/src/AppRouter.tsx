@@ -1,3 +1,4 @@
+import { GuideRoute } from "@/guides/GuideRoute";
 import { NavBarLayout } from "@/layouts/NavBarLayout";
 import { BridgePage } from "@/pages/BridgePage";
 import { ChainsPage } from "@/pages/ChainsPage";
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
       {
         path: "/contracts",
         element: <SuperchainContractPage />,
+      },
+      {
+        path: "/guides/*",
+        element: <GuideRoute />,
       },
     ],
   },

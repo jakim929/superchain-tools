@@ -32,7 +32,7 @@ const NavItem = ({
 }: {
   to: string;
   title: string;
-  icon: React.ComponentType<any>;
+  icon?: React.ComponentType<any>;
 }) => {
   const { pathname } = useLocation();
   const isSelected = pathname === to;
@@ -41,7 +41,7 @@ const NavItem = ({
     <SidebarMenuItem key={title}>
       <SidebarMenuButton asChild isActive={isSelected}>
         <Link to={to}>
-          <Icon className="mr-2 h-4 w-4" />
+          {Icon && <Icon className="mr-2 h-4 w-4" />}
           {title}
         </Link>
       </SidebarMenuButton>
@@ -113,6 +113,15 @@ export const SideNav = () => {
           <SidebarGroupContent>
             <SidebarMenu>
               <NavItem to="/config" title="RPC Overrides" icon={Settings} />
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Guides</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <NavItem to="/chains" title="Deploying SuperchainERC20" />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
