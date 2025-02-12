@@ -24,8 +24,8 @@ importers:
   packages/chains:
     dependencies:
       '@eth-optimism/viem':
-        specifier: ^0.0.12
-        version: 0.0.12(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4))
+        specifier: ^0.3.2
+        version: 0.3.2(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4))
       abitype:
         specifier: ^0.8.11
         version: 0.8.11(typescript@5.2.2)(zod@3.22.4)
@@ -1805,6 +1805,11 @@ packages:
 
   '@eth-optimism/viem@0.0.12':
     resolution: {integrity: sha512-0D6UsjcrC3uNWmyEnfZ4kpAwPqqKr/sUv2HvRGEYzeiJcp0cUpGZrff1MynJdg9ACMLHOc0pG8PdfHY9Jy3rjA==}
+    peerDependencies:
+      viem: ^2.17.9
+
+  '@eth-optimism/viem@0.3.2':
+    resolution: {integrity: sha512-oH8T3uY8oTPMNF1ZHI6k6i226w9KuhMGT/KEeNhdaR9U8ertzITW095nPuQoD8OYtK7o+3kJuPa9wJciwEeP1Q==}
     peerDependencies:
       viem: ^2.17.9
 
@@ -8633,6 +8638,10 @@ snapshots:
       viem: 2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.24.1)
 
   '@eth-optimism/viem@0.0.12(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4))':
+    dependencies:
+      viem: 2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4)
+
+  '@eth-optimism/viem@0.3.2(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4))':
     dependencies:
       viem: 2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4)
 

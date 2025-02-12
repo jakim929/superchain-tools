@@ -2,6 +2,7 @@ import { supersimChains } from "@/supersim/supersimChains";
 import { superchainRegistryChains } from "@/superchain-registry/superchainRegistryChains";
 import { Chain } from "viem/chains";
 import { viemChainById } from "@/viemChainById";
+import { interopAlphaChains } from "@/interop-alpha/interopAlphaChains";
 export { chainListLastUpdated } from "@/generated/chainList";
 
 export { superchainRegistryChains };
@@ -18,6 +19,7 @@ export const superchainRegistrySourceChains: Chain[] = Array.from(
 export const chains: Chain[] = [
   ...superchainRegistryChains,
   ...supersimChains,
+  ...interopAlphaChains,
 ] as const satisfies Chain[];
 
 export const chainById = chains.reduce((acc, chain) => {

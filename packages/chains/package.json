@@ -11,7 +11,7 @@
     "pull-superchain-registry": "tsx scripts/pullSuperchainRegistryChainList.ts && biome format ./src/generated/chainList.ts --write"
   },
   "dependencies": {
-    "@eth-optimism/viem": "^0.0.12",
+    "@eth-optimism/viem": "^0.3.2",
     "abitype": "^0.8.11",
     "viem": "^2.21.53",
     "zod": "^3.22.4"

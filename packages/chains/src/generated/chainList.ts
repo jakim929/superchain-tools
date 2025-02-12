@@ -1,29 +1,7 @@
 import { ChainListItem } from '@/superchain-registry/fetchChainList'
 
-export const chainListLastUpdated = '2025-01-03T17:19:35.424Z'
+export const chainListLastUpdated = '2025-02-12T21:31:42.585Z'
 export const chainList = [
-  {
-    name: 'OP Mainnet',
-    identifier: 'mainnet/op',
-    chainId: 10,
-    rpc: ['https://mainnet.optimism.io'],
-    explorers: ['https://explorer.optimism.io'],
-    parent: {
-      type: 'L2',
-      chain: 'mainnet',
-    },
-  },
-  {
-    name: 'arena-z',
-    identifier: 'mainnet/arena-z',
-    chainId: 7897,
-    rpc: ['https://rpc.arena-z.gg'],
-    explorers: ['https://explorer.arena-z.gg'],
-    parent: {
-      type: 'L2',
-      chain: 'mainnet',
-    },
-  },
   {
     name: 'Automata Mainnet',
     identifier: 'mainnet/automata',
@@ -36,11 +14,33 @@ export const chainList = [
     },
   },
   {
+    name: 'BOB',
+    identifier: 'mainnet/bob',
+    chainId: 60808,
+    rpc: ['https://rpc.gobob.xyz'],
+    explorers: ['https://explorer.gobob.xyz'],
+    parent: {
+      type: 'L2',
+      chain: 'mainnet',
+    },
+  },
+  {
     name: 'Base',
     identifier: 'mainnet/base',
     chainId: 8453,
     rpc: ['https://mainnet.base.org'],
     explorers: ['https://explorer.base.org'],
+    parent: {
+      type: 'L2',
+      chain: 'mainnet',
+    },
+  },
+  {
+    name: 'Binary Mainnet',
+    identifier: 'mainnet/tbn',
+    chainId: 624,
+    rpc: ['https://rpc.zero.thebinaryholdings.com'],
+    explorers: ['https://explorer.thebinaryholdings.com'],
     parent: {
       type: 'L2',
       chain: 'mainnet',
@@ -74,6 +74,17 @@ export const chainList = [
     chainId: 33979,
     rpc: ['https://rpc-mainnet.funkichain.com'],
     explorers: ['https://funki.superscan.network'],
+    parent: {
+      type: 'L2',
+      chain: 'mainnet',
+    },
+  },
+  {
+    name: 'HashKey Chain',
+    identifier: 'mainnet/hashkeychain',
+    chainId: 177,
+    rpc: ['https://mainnet.hsk.xyz'],
+    explorers: ['https://explorer.hsk.xyz'],
     parent: {
       type: 'L2',
       chain: 'mainnet',
@@ -124,6 +135,17 @@ export const chainList = [
     },
   },
   {
+    name: 'Mint Mainnet',
+    identifier: 'mainnet/mint',
+    chainId: 185,
+    rpc: ['https://rpc.mintchain.io'],
+    explorers: ['https://explorer.mintchain.io'],
+    parent: {
+      type: 'L2',
+      chain: 'mainnet',
+    },
+  },
+  {
     name: 'Mode',
     identifier: 'mainnet/mode',
     chainId: 34443,
@@ -135,11 +157,33 @@ export const chainList = [
     },
   },
   {
+    name: 'OP Mainnet',
+    identifier: 'mainnet/op',
+    chainId: 10,
+    rpc: ['https://mainnet.optimism.io'],
+    explorers: ['https://explorer.optimism.io'],
+    parent: {
+      type: 'L2',
+      chain: 'mainnet',
+    },
+  },
+  {
     name: 'Orderly Mainnet',
     identifier: 'mainnet/orderly',
     chainId: 291,
     rpc: ['https://rpc.orderly.network'],
     explorers: ['https://explorer.orderly.network'],
+    parent: {
+      type: 'L2',
+      chain: 'mainnet',
+    },
+  },
+  {
+    name: 'Polynomial',
+    identifier: 'mainnet/polynomial',
+    chainId: 8008,
+    rpc: ['https://rpc.polynomial.fi'],
+    explorers: ['https://polynomialscan.io'],
     parent: {
       type: 'L2',
       chain: 'mainnet',
@@ -179,6 +223,17 @@ export const chainList = [
     },
   },
   {
+    name: 'Soneium',
+    identifier: 'mainnet/soneium',
+    chainId: 1868,
+    rpc: ['https://rpc.soneium.org'],
+    explorers: ['https://soneium.blockscout.com/'],
+    parent: {
+      type: 'L2',
+      chain: 'mainnet',
+    },
+  },
+  {
     name: 'Superseed',
     identifier: 'mainnet/sseed',
     chainId: 5330,
@@ -212,11 +267,11 @@ export const chainList = [
     },
   },
   {
-    name: 'Binary Mainnet',
-    identifier: 'mainnet/tbn',
-    chainId: 624,
-    rpc: ['https://rpc.zero.thebinaryholdings.com'],
-    explorers: ['https://explorer.thebinaryholdings.com'],
+    name: 'Unichain',
+    identifier: 'mainnet/unichain',
+    chainId: 130,
+    rpc: ['https://mainnet.unichain.org'],
+    explorers: ['https://explorer.unichain.org'],
     parent: {
       type: 'L2',
       chain: 'mainnet',
@@ -234,6 +289,17 @@ export const chainList = [
     },
   },
   {
+    name: 'Xterio Chain (ETH)',
+    identifier: 'mainnet/xterio-eth',
+    chainId: 2702128,
+    rpc: ['https://xterio-eth.alt.technology/'],
+    explorers: ['https://eth.xterscan.io/'],
+    parent: {
+      type: 'L2',
+      chain: 'mainnet',
+    },
+  },
+  {
     name: 'Zora',
     identifier: 'mainnet/zora',
     chainId: 7777777,
@@ -245,25 +311,14 @@ export const chainList = [
     },
   },
   {
-    name: 'OP Sepolia Testnet',
-    identifier: 'sepolia/op',
-    chainId: 11155420,
-    rpc: ['https://sepolia.optimism.io'],
-    explorers: ['https://sepolia-optimistic.etherscan.io'],
+    name: 'arena-z',
+    identifier: 'mainnet/arena-z',
+    chainId: 7897,
+    rpc: ['https://rpc.arena-z.gg'],
+    explorers: ['https://explorer.arena-z.gg'],
     parent: {
       type: 'L2',
-      chain: 'sepolia',
-    },
-  },
-  {
-    name: 'arena-z-testnet',
-    identifier: 'sepolia/arena-z-testnet',
-    chainId: 9897,
-    rpc: ['https://rpc.arena-z.t.raas.gelato.cloud'],
-    explorers: ['https://arena-z.blockscout.com'],
-    parent: {
-      type: 'L2',
-      chain: 'sepolia',
+      chain: 'mainnet',
     },
   },
   {
@@ -272,6 +327,28 @@ export const chainList = [
     chainId: 84532,
     rpc: ['https://sepolia.base.org'],
     explorers: ['https://sepolia-explorer.base.org'],
+    parent: {
+      type: 'L2',
+      chain: 'sepolia',
+    },
+  },
+  {
+    name: 'Binary Sepolia',
+    identifier: 'sepolia/tbn',
+    chainId: 625,
+    rpc: ['https://rpc.testnet.thebinaryholdings.com'],
+    explorers: ['https://explorer.sepolia.thebinaryholdings.com'],
+    parent: {
+      type: 'L2',
+      chain: 'sepolia',
+    },
+  },
+  {
+    name: 'Creator Chain Testnet',
+    identifier: 'sepolia/creator-chain-testnet',
+    chainId: 66665,
+    rpc: ['https://rpc.creatorchain.io'],
+    explorers: ['https://explorer.creatorchain.io'],
     parent: {
       type: 'L2',
       chain: 'sepolia',
@@ -344,22 +421,33 @@ export const chainList = [
     },
   },
   {
-    name: 'Minato',
-    identifier: 'sepolia/minato',
-    chainId: 1946,
-    rpc: ['https://rpc.minato.soneium.org'],
-    explorers: ['https://soneium-minato.blockscout.com/'],
+    name: 'Mode Testnet',
+    identifier: 'sepolia/mode',
+    chainId: 919,
+    rpc: ['https://sepolia.mode.network'],
+    explorers: ['https://sepolia.explorer.mode.network'],
     parent: {
       type: 'L2',
       chain: 'sepolia',
     },
   },
   {
-    name: 'Mode Testnet',
-    identifier: 'sepolia/mode',
-    chainId: 919,
-    rpc: ['https://sepolia.mode.network'],
-    explorers: ['https://sepolia.explorer.mode.network'],
+    name: 'OP Sepolia Testnet',
+    identifier: 'sepolia/op',
+    chainId: 11155420,
+    rpc: ['https://sepolia.optimism.io'],
+    explorers: ['https://sepolia-optimistic.etherscan.io'],
+    parent: {
+      type: 'L2',
+      chain: 'sepolia',
+    },
+  },
+  {
+    name: 'Pivotal Sepolia',
+    identifier: 'sepolia/pivotal',
+    chainId: 16481,
+    rpc: ['https://sepolia.pivotalprotocol.com/'],
+    explorers: ['https://sepolia.pivotalscan.org/'],
     parent: {
       type: 'L2',
       chain: 'sepolia',
@@ -388,11 +476,11 @@ export const chainList = [
     },
   },
   {
-    name: 'Binary Sepolia',
-    identifier: 'sepolia/tbn',
-    chainId: 625,
-    rpc: ['https://rpc.testnet.thebinaryholdings.com'],
-    explorers: ['https://explorer.sepolia.thebinaryholdings.com'],
+    name: 'Soneium Testnet Minato',
+    identifier: 'sepolia/soneium-minato',
+    chainId: 1946,
+    rpc: ['https://rpc.minato.soneium.org'],
+    explorers: ['https://soneium-minato.blockscout.com/'],
     parent: {
       type: 'L2',
       chain: 'sepolia',
@@ -426,6 +514,17 @@ export const chainList = [
     chainId: 999999999,
     rpc: ['https://sepolia.rpc.zora.energy'],
     explorers: ['https://sepolia.explorer.zora.energy'],
+    parent: {
+      type: 'L2',
+      chain: 'sepolia',
+    },
+  },
+  {
+    name: 'arena-z-testnet',
+    identifier: 'sepolia/arena-z-testnet',
+    chainId: 9897,
+    rpc: ['https://rpc.arena-z.t.raas.gelato.cloud'],
+    explorers: ['https://arena-z.blockscout.com'],
     parent: {
       type: 'L2',
       chain: 'sepolia',
