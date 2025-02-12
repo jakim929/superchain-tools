@@ -1,6 +1,6 @@
 import { interopAlphaChains } from "@/interop-alpha/interopAlphaChains";
 import { supersimChains } from "@/supersim/supersimChains";
-import { supersimL1 } from "@eth-optimism/viem";
+import { supersimL1 } from "@eth-optimism/viem/chains";
 import * as chains from "viem/chains";
 import { Chain } from "viem/chains";
 

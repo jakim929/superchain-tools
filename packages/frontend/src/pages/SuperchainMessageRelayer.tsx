@@ -45,8 +45,9 @@ import {
   useReadContract,
 } from "wagmi";
 
-import { supersimL1, supersimL2A, contracts } from "@eth-optimism/viem";
-import { l2ToL2CrossDomainMessengerABI } from "@eth-optimism/viem";
+import { contracts } from "@eth-optimism/viem";
+import { supersimL1, supersimL2A } from "@eth-optimism/viem/chains";
+import { l2ToL2CrossDomainMessengerAbi } from "@eth-optimism/viem";
 import { chainById } from "@superchain-tools/chains";
 import { predeployByContractAddress } from "@/constants/predeployByContractAddress";
 import { getL2ToL2CrossDomainMessageHash } from "@/lib/getL2ToL2CrossDomainMessageHash";

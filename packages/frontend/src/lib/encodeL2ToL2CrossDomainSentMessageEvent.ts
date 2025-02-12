@@ -1,19 +1,17 @@
 import {
-  Address,
   encodeAbiParameters,
   encodeEventTopics,
   encodePacked,
-  Hex,
   toHex,
 } from "viem";
-import { l2ToL2CrossDomainMessengerABI } from "@eth-optimism/viem";
+import { l2ToL2CrossDomainMessengerAbi } from "@eth-optimism/viem";
 import { L2ToL2CrossDomainMessage } from "@/types/L2ToL2CrossDomainMessage";
 
 export const encodeL2ToL2CrossDomainSentMessageEvent = (
   message: L2ToL2CrossDomainMessage
 ) => {
   const topics = encodeEventTopics({
-    abi: l2ToL2CrossDomainMessengerABI,
+    abi: l2ToL2CrossDomainMessengerAbi,
     eventName: "SentMessage",
     args: {
       destination: message.destination,

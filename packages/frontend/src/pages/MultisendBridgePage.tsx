@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { sourceChains } from "@superchain-tools/chains";
 import { useConfig } from "@/stores/useConfig";
-import { supersimL1 } from "@eth-optimism/viem";
+import { supersimL1 } from "@eth-optimism/viem/chains";
 import { sepolia } from "viem/chains";
 import { AvailableNetworks } from "@/components/AvailableNetworks";
 import { MultisendBridgeCard } from "@/components/MultisendBridgeCard";

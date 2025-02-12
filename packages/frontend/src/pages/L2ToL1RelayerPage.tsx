@@ -9,7 +9,7 @@ import { WaitingToProve } from "@/withdrawal-status/WaitingToProve";
 import { ReadyToFinalize } from "@/withdrawal-status/ReadyToFinalize";
 import { WaitingToFinalize } from "@/withdrawal-status/WaitingToFinalize";
 import { Finalized } from "@/withdrawal-status/Finalized";
-import { supersimL1 } from "@eth-optimism/viem";
+import { supersimL1 } from "@eth-optimism/viem/chains";
 
 import { Search } from "lucide-react";
 import {

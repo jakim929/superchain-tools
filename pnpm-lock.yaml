@@ -84,11 +84,11 @@ importers:
   packages/frontend:
     dependencies:
       '@eth-optimism/viem':
-        specifier: ^0.0.12
-        version: 0.0.12(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4))
+        specifier: ^0.3.2
+        version: 0.3.2(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4))
       '@eth-optimism/wagmi':
         specifier: ^0.0.12
-        version: 0.0.12(@eth-optimism/viem@0.0.12(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4)))(@tanstack/react-query@5.59.19(react@18.2.0))(react@18.2.0)(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4))(wagmi@2.12.25(@tanstack/query-core@5.59.17)(@tanstack/react-query@5.59.19(react@18.2.0))(@types/react@18.2.31)(bufferutil@4.0.8)(immer@10.0.3)(react-dom@18.2.0(react@18.2.0))(react-native@0.76.1(@babel/core@7.23.2)(@babel/preset-env@7.26.0(@babel/core@7.23.2))(@types/react@18.2.31)(bufferutil@4.0.8)(react@18.2.0)(utf-8-validate@5.0.10))(react@18.2.0)(typescript@5.2.2)(utf-8-validate@5.0.10)(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4))(zod@3.22.4))
+        version: 0.0.12(@eth-optimism/viem@0.3.2(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4)))(@tanstack/react-query@5.59.19(react@18.2.0))(react@18.2.0)(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4))(wagmi@2.12.25(@tanstack/query-core@5.59.17)(@tanstack/react-query@5.59.19(react@18.2.0))(@types/react@18.2.31)(bufferutil@4.0.8)(immer@10.0.3)(react-dom@18.2.0(react@18.2.0))(react-native@0.76.1(@babel/core@7.23.2)(@babel/preset-env@7.26.0(@babel/core@7.23.2))(@types/react@18.2.31)(bufferutil@4.0.8)(react@18.2.0)(utf-8-validate@5.0.10))(react@18.2.0)(typescript@5.2.2)(utf-8-validate@5.0.10)(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4))(zod@3.22.4))
       '@mdx-js/react':
         specifier: ^3.1.0
         version: 3.1.0(@types/react@18.2.31)(react@18.2.0)
@@ -290,8 +290,8 @@ importers:
   packages/superchainerc20-checks:
     dependencies:
       '@eth-optimism/viem':
-        specifier: ^0.0.11
-        version: 0.0.11(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.24.1))
+        specifier: ^0.3.2
+        version: 0.3.2(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.24.1))
       viem:
         specifier: ^2.21.53
         version: 2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.24.1)
@@ -1797,16 +1797,6 @@ packages:
   '@eslint/js@8.52.0':
     resolution: {integrity: sha512-mjZVbpaeMZludF2fsWLD0Z9gCref1Tk4i9+wddjRvpUNqqcndPkBD09N/Mapey0b3jaXbLm2kICwFv2E64QinA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-
-  '@eth-optimism/viem@0.0.11':
-    resolution: {integrity: sha512-bBBWzVev+rxq9CF3bvUii0Sni5gaId8WLGWJMerthNj0wi/RxdODBWsFB8VP1fLFcq1uGs43Xe40lePmmr8ivA==}
-    peerDependencies:
-      viem: ^2.17.9
-
-  '@eth-optimism/viem@0.0.12':
-    resolution: {integrity: sha512-0D6UsjcrC3uNWmyEnfZ4kpAwPqqKr/sUv2HvRGEYzeiJcp0cUpGZrff1MynJdg9ACMLHOc0pG8PdfHY9Jy3rjA==}
-    peerDependencies:
-      viem: ^2.17.9
 
   '@eth-optimism/viem@0.3.2':
     resolution: {integrity: sha512-oH8T3uY8oTPMNF1ZHI6k6i226w9KuhMGT/KEeNhdaR9U8ertzITW095nPuQoD8OYtK7o+3kJuPa9wJciwEeP1Q==}
@@ -8633,21 +8623,17 @@ snapshots:
 
   '@eslint/js@8.52.0': {}
 
-  '@eth-optimism/viem@0.0.11(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.24.1))':
-    dependencies:
-      viem: 2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.24.1)
-
-  '@eth-optimism/viem@0.0.12(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4))':
-    dependencies:
-      viem: 2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4)
-
   '@eth-optimism/viem@0.3.2(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4))':
     dependencies:
       viem: 2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4)
 
-  '@eth-optimism/wagmi@0.0.12(@eth-optimism/viem@0.0.12(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4)))(@tanstack/react-query@5.59.19(react@18.2.0))(react@18.2.0)(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4))(wagmi@2.12.25(@tanstack/query-core@5.59.17)(@tanstack/react-query@5.59.19(react@18.2.0))(@types/react@18.2.31)(bufferutil@4.0.8)(immer@10.0.3)(react-dom@18.2.0(react@18.2.0))(react-native@0.76.1(@babel/core@7.23.2)(@babel/preset-env@7.26.0(@babel/core@7.23.2))(@types/react@18.2.31)(bufferutil@4.0.8)(react@18.2.0)(utf-8-validate@5.0.10))(react@18.2.0)(typescript@5.2.2)(utf-8-validate@5.0.10)(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4))(zod@3.22.4))':
+  '@eth-optimism/viem@0.3.2(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.24.1))':
     dependencies:
-      '@eth-optimism/viem': 0.0.12(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4))
+      viem: 2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.24.1)
+
+  '@eth-optimism/wagmi@0.0.12(@eth-optimism/viem@0.3.2(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4)))(@tanstack/react-query@5.59.19(react@18.2.0))(react@18.2.0)(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4))(wagmi@2.12.25(@tanstack/query-core@5.59.17)(@tanstack/react-query@5.59.19(react@18.2.0))(@types/react@18.2.31)(bufferutil@4.0.8)(immer@10.0.3)(react-dom@18.2.0(react@18.2.0))(react-native@0.76.1(@babel/core@7.23.2)(@babel/preset-env@7.26.0(@babel/core@7.23.2))(@types/react@18.2.31)(bufferutil@4.0.8)(react@18.2.0)(utf-8-validate@5.0.10))(react@18.2.0)(typescript@5.2.2)(utf-8-validate@5.0.10)(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4))(zod@3.22.4))':
+    dependencies:
+      '@eth-optimism/viem': 0.3.2(viem@2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4))
       '@tanstack/react-query': 5.59.19(react@18.2.0)
       react: 18.2.0
       viem: 2.21.53(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.22.4)

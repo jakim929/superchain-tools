@@ -11,7 +11,8 @@ import {
 } from "@/components/ui/select";
 import { useTokenInfo } from "@/hooks/useTokenInfo";
 import { Address, parseUnits } from "viem";
-import { contracts, supersimL1 } from "@eth-optimism/viem";
+import { contracts } from "@eth-optimism/viem";
+import { supersimL1 } from "@eth-optimism/viem/chains";
 import {
   useAccount,
   useSimulateContract,

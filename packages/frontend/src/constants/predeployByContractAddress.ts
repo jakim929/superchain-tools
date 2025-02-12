@@ -1,4 +1,5 @@
-import { contracts, superchainTokenBridgeABI } from "@eth-optimism/viem";
+import { superchainTokenBridgeAbi } from "@/constants/superchainTokenBridgeAbi";
+import { contracts } from "@eth-optimism/viem";
 import { Abi, Address } from "viem";
 
 export const predeployByContractAddress: Record<
@@ -6,7 +7,7 @@ export const predeployByContractAddress: Record<
   { abi: Abi; name: string }
 > = {
   [contracts.superchainTokenBridge.address]: {
-    abi: superchainTokenBridgeABI,
+    abi: superchainTokenBridgeAbi,
     name: "SuperchainTokenBridge",
   },
 };
