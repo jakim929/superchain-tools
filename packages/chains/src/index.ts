@@ -18,8 +18,8 @@ export const superchainRegistrySourceChains: Chain[] = Array.from(
 
 export const chains: Chain[] = [
   ...superchainRegistryChains,
-  ...supersimChains,
   ...interopAlphaChains,
+  ...supersimChains,
 ] as const satisfies Chain[];
 
 export const chainById = chains.reduce((acc, chain) => {

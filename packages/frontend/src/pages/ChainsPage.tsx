@@ -43,17 +43,21 @@ const ChainRow = ({ chain }: { chain: Chain }) => {
   return (
     <TableRow className="hover:bg-gray-100">
       <TableCell className="font-medium">
-        <a
-          href={chain.blockExplorers!.default.url}
-          target="_blank"
-          rel="noreferrer"
-          className={cn(
-            buttonVariants({ variant: "link" }),
-            "px-0 text-primary hover:text-primary/80 underline"
-          )}
-        >
-          {chain.name}
-        </a>
+        {chain.blockExplorers?.default ? (
+          <a
+            href={chain.blockExplorers!.default.url}
+            target="_blank"
+            rel="noreferrer"
+            className={cn(
+              buttonVariants({ variant: "link" }),
+              "px-0 text-primary hover:text-primary/80 underline"
+            )}
+          >
+            {chain.name}
+          </a>
+        ) : (
+          <span>{chain.name}</span>
+        )}
       </TableCell>
       <TableCell>
         <Badge
