@@ -70,18 +70,33 @@ export const WalletAddressInput = ({
 
     if (values.length === 0) return;
 
-    let allValid = true;
+    const newAddresses = [...addresses];
+    const invalidAddresses: string[] = [];
+    let anyAdded = false;
+
     for (const value of values) {
-      const success = addAddress(value);
-      if (!success) {
-        allValid = false;
-        break;
+      if (isAddress(value)) {
+        const normalizedAddress = value as Address;
+        if (!addresses.includes(normalizedAddress)) {
+          newAddresses.push(normalizedAddress);
+          anyAdded = true;
+        }
+      } else {
+        invalidAddresses.push(value);
       }
     }
 
-    if (allValid) {
-      setInputValue("");
+    // Only show error for invalid addresses
+    if (invalidAddresses.length > 0) {
+      setError(`Invalid addresses: ${invalidAddresses.join(", ")}`);
+    } else {
       setError(null);
+    }
+
+    // Update addresses if we added any new ones
+    if (anyAdded) {
+      setAddresses(newAddresses);
+      setInputValue("");
     }
   };
 

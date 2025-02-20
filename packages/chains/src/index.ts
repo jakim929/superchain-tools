@@ -3,6 +3,9 @@ import { superchainRegistryChains } from "@/superchain-registry/superchainRegist
 import { Chain } from "viem/chains";
 import { viemChainById } from "@/viemChainById";
 import { interopAlphaChains } from "@/interop-alpha/interopAlphaChains";
+
+export { networks } from "@/networks";
+
 export { chainListLastUpdated } from "@/generated/chainList";
 
 export { superchainRegistryChains };
