@@ -9,10 +9,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { parseUnits } from "viem";
+import { Chain, formatEther, parseUnits } from "viem";
 import { contracts, superchainWETHAbi } from "@eth-optimism/viem";
 import {
   useAccount,
+  useBalance,
   useSimulateContract,
   useSwitchChain,
   useWaitForTransactionReceipt,
@@ -192,13 +193,7 @@ export const SuperchainETHBridgePage = () => {
                   </SelectTrigger>
                   <SelectContent>
                     {filteredChains.map((chain) => (
-                      <SelectItem
-                        key={chain.id}
-                        value={chain.id.toString()}
-                        className="text-sm"
-                      >
-                        {chain.name}
-                      </SelectItem>
+                      <SelectWithBalance chain={chain} />
                     ))}
                   </SelectContent>
                 </Select>
@@ -218,13 +213,7 @@ export const SuperchainETHBridgePage = () => {
                     {filteredChains
                       .filter((chain) => chain.id !== fromChainId)
                       .map((chain) => (
-                        <SelectItem
-                          key={chain.id}
-                          value={chain.id.toString()}
-                          className="text-sm"
-                        >
-                          {chain.name}
-                        </SelectItem>
+                        <SelectWithBalance chain={chain} />
                       ))}
                   </SelectContent>
                 </Select>
@@ -266,5 +255,37 @@ export const SuperchainETHBridgePage = () => {
         </Alert>
       )}
     </div>
+  );
+};
+
+const SelectWithBalance = ({ chain }: { chain: Chain }) => {
+  const { address } = useAccount();
+  const {
+    data: balance,
+    isLoading,
+    error,
+  } = useBalance({
+    address,
+    chainId: chain.id,
+  });
+  return (
+    <SelectItem
+      key={chain.id}
+      value={chain.id.toString()}
+      className="w-full text-sm flex items-center justify-between"
+    >
+      <div className="w-full flex justify-between items-center gap-2">
+        {chain.name}
+        {isLoading ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : (
+          <span className="text-xs text-muted-foreground">
+            {error
+              ? ""
+              : `(${Number(formatEther(balance?.value || 0n)).toFixed(5)} ETH)`}
+          </span>
+        )}
+      </div>
+    </SelectItem>
   );
 };
