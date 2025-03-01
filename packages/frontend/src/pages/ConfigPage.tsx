@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { sourceChains, chains } from "@superchain-tools/chains";
+import { networks } from "@superchain-tools/chains";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useConfig } from "@/stores/useConfig";
@@ -74,8 +74,8 @@ export const ConfigPage = () => {
   const {
     rpcOverrideByChainId,
     setRpcOverrideByChainId,
-    sourceChainId,
-    setSourceChainId,
+    networkName,
+    setNetworkName,
   } = useConfig();
 
   const handleClearOverride = (chainId: number) => {
@@ -101,29 +101,25 @@ export const ConfigPage = () => {
             htmlFor="source-chain"
             className="text-sm text-muted-foreground w-32"
           >
-            Source Network
+            Network
           </Label>
           <Select
-            value={sourceChainId.toString()}
-            onValueChange={(value) => setSourceChainId(Number(value))}
+            value={networkName}
+            onValueChange={(value) => setNetworkName(value)}
           >
             <SelectTrigger id="source-chain" className="w-[240px]">
               <SelectValue placeholder="Select source network" />
             </SelectTrigger>
             <SelectContent>
-              {sourceChains.map((sourceChain) => {
+              {networks.map((network) => {
                 const hasOverride =
-                  chains
-                    .filter((chain) => chain.sourceId === sourceChain.id)
-                    .some((chain) => !!rpcOverrideByChainId[chain.id]) ||
-                  !!rpcOverrideByChainId[sourceChain.id];
+                  network.chains.some(
+                    (chain) => !!rpcOverrideByChainId[chain.id]
+                  ) || !!rpcOverrideByChainId[network.sourceChain.id];
                 return (
-                  <SelectItem
-                    key={sourceChain.id}
-                    value={sourceChain.id.toString()}
-                  >
+                  <SelectItem key={network.name} value={network.name}>
                     <div className="w-[180px]  flex-1 flex items-center justify-between">
-                      <div>{sourceChain.name}</div>
+                      <div>{network.name}</div>
                       {hasOverride && (
                         <div className="flex items-center text-muted-foreground gap-1 text-xs">
                           <Wrench className="h-3 w-3" />
@@ -138,65 +134,61 @@ export const ConfigPage = () => {
           </Select>
         </div>
 
-        {sourceChains
-          .filter((chain) => chain.id === sourceChainId)
-          .map((sourceChain) => (
-            <div key={sourceChain.id} className="space-y-3">
-              <h3 className="text-lg font-semibold border-b pb-2">
-                {sourceChain.name}
-              </h3>
-              <div className="grid grid-cols-[200px,1fr] gap-4 items-center mb-4">
-                <Label
-                  htmlFor={`chain-${sourceChain.id}`}
-                  className="text-sm text-muted-foreground flex items-center gap-2"
-                >
-                  {sourceChain.name} ({sourceChain.id})
-                  {rpcOverrideByChainId[sourceChain.id] && (
-                    <Wrench className="h-3 w-3" />
-                  )}
-                </Label>
-                <UrlInput
-                  id={`chain-${sourceChain.id}`}
-                  placeholder={sourceChain.rpcUrls.default.http[0]}
-                  value={rpcOverrideByChainId[sourceChain.id] || ""}
-                  onChange={(value) =>
-                    setRpcOverrideByChainId(sourceChain.id, value)
-                  }
-                  onClear={() => handleClearOverride(sourceChain.id)}
-                />
-              </div>
-              <hr className="my-4 border-t border-gray-300" />
-              <div className="space-y-2">
-                {chains
-                  .filter((chain) => chain.sourceId === sourceChain.id)
-                  .map((chain) => (
-                    <div
-                      key={chain.id}
-                      className="grid grid-cols-[200px,1fr] gap-4 items-center"
-                    >
-                      <Label
-                        htmlFor={`chain-${chain.id}`}
-                        className="text-sm text-muted-foreground flex items-center gap-2"
-                      >
-                        {chain.name} ({chain.id})
-                        {rpcOverrideByChainId[chain.id] && (
-                          <Wrench className="h-3 w-3" />
-                        )}
-                      </Label>
-                      <UrlInput
-                        id={`chain-${chain.id}`}
-                        placeholder={chain.rpcUrls.default.http[0]}
-                        value={rpcOverrideByChainId[chain.id] || ""}
-                        onChange={(value) =>
-                          setRpcOverrideByChainId(chain.id, value)
-                        }
-                        onClear={() => handleClearOverride(chain.id)}
-                      />
-                    </div>
-                  ))}
-              </div>
+        {networks.map((network) => (
+          <div key={network.sourceChain.id} className="space-y-3">
+            <h3 className="text-lg font-semibold border-b pb-2">
+              {network.sourceChain.name}
+            </h3>
+            <div className="grid grid-cols-[200px,1fr] gap-4 items-center mb-4">
+              <Label
+                htmlFor={`chain-${network.sourceChain.id}`}
+                className="text-sm text-muted-foreground flex items-center gap-2"
+              >
+                {network.sourceChain.name} ({network.sourceChain.id})
+                {rpcOverrideByChainId[network.sourceChain.id] && (
+                  <Wrench className="h-3 w-3" />
+                )}
+              </Label>
+              <UrlInput
+                id={`chain-${network.sourceChain.id}`}
+                placeholder={network.sourceChain.rpcUrls.default.http[0]}
+                value={rpcOverrideByChainId[network.sourceChain.id] || ""}
+                onChange={(value) =>
+                  setRpcOverrideByChainId(network.sourceChain.id, value)
+                }
+                onClear={() => handleClearOverride(network.sourceChain.id)}
+              />
             </div>
-          ))}
+            <hr className="my-4 border-t border-gray-300" />
+            <div className="space-y-2">
+              {network.chains.map((chain) => (
+                <div
+                  key={chain.id}
+                  className="grid grid-cols-[200px,1fr] gap-4 items-center"
+                >
+                  <Label
+                    htmlFor={`chain-${chain.id}`}
+                    className="text-sm text-muted-foreground flex items-center gap-2"
+                  >
+                    {chain.name} ({chain.id})
+                    {rpcOverrideByChainId[chain.id] && (
+                      <Wrench className="h-3 w-3" />
+                    )}
+                  </Label>
+                  <UrlInput
+                    id={`chain-${chain.id}`}
+                    placeholder={chain.rpcUrls.default.http[0]}
+                    value={rpcOverrideByChainId[chain.id] || ""}
+                    onChange={(value) =>
+                      setRpcOverrideByChainId(chain.id, value)
+                    }
+                    onClear={() => handleClearOverride(chain.id)}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
       </CardContent>
     </Card>
   );
