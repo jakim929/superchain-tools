@@ -50,7 +50,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ChevronUp, Pencil } from "lucide-react";
-import { chainById, chains } from "@superchain-tools/chains";
+import { chainById, chains, networkByName } from "@superchain-tools/chains";
 import { useConfig } from "@/stores/useConfig";
 import {
   Tooltip,
@@ -315,7 +315,7 @@ const ChainChecks = ({
 
 interface CheckerParams {
   address: Address | null;
-  sourceChainId: number | null;
+  networkName: string;
   chainIds: number[];
 }
 
@@ -324,19 +324,19 @@ const useCheckerParams = (): CheckerParams => {
 
   return {
     address: searchParams.get("address") as Address | null,
-    sourceChainId: parseInt(searchParams.get("sourceChainId") || ""),
+    networkName: searchParams.get("networkName") || "",
     chainIds: searchParams.get("chainIds")?.split(",").map(Number) || [],
   };
 };
 
 const Checks = () => {
-  const { address, sourceChainId, chainIds } = useCheckerParams();
+  const { address, networkName, chainIds } = useCheckerParams();
 
   const chainsToCheck = chainIds.map((id) => chainById[id]);
 
   const checksResult = useChecks(chainsToCheck, address!);
 
-  if (!address || !sourceChainId || !chainIds.length) {
+  if (!address || !networkName || !chainIds.length) {
     return null;
   }
 
@@ -378,10 +378,11 @@ const Checks = () => {
 
 export const SuperchainERC20ChecksPage = () => {
   const navigate = useNavigate();
-  const { sourceChainId } = useConfig();
+  const { networkName } = useConfig();
+  const network = networkByName[networkName];
   const {
     address: urlAddress,
-    sourceChainId: urlSourceChainId,
+    networkName: urlNetworkName,
     chainIds,
   } = useCheckerParams();
 
@@ -411,7 +412,7 @@ export const SuperchainERC20ChecksPage = () => {
         pathname: "/superchainerc20-checks",
         search: createSearchParams({
           address: result.data,
-          sourceChainId: sourceChainId?.toString(),
+          networkName: networkName,
           chainIds: selectedChainIds.join(","),
         }).toString(),
       });
@@ -422,7 +423,7 @@ export const SuperchainERC20ChecksPage = () => {
 
   const hasParamsChanged = () => {
     const addressChanged = address !== urlAddress;
-    const networkChanged = sourceChainId !== urlSourceChainId;
+    const networkChanged = networkName !== urlNetworkName;
     const chainsChanged =
       selectedChainIds.length !== chainIds.length ||
       !selectedChainIds.every((id) => chainIds.includes(id));
@@ -459,7 +460,7 @@ export const SuperchainERC20ChecksPage = () => {
               <div className="space-y-6">
                 <NetworkPicker />
 
-                {sourceChainId && (
+                {network && (
                   <div className="space-y-4">
                     <div className="flex justify-between items-center mb-2">
                       <label className="text-sm font-medium">
@@ -471,11 +472,7 @@ export const SuperchainERC20ChecksPage = () => {
                           size="sm"
                           onClick={() =>
                             setSelectedChainIds(
-                              chains
-                                .filter(
-                                  (chain) => chain.sourceId === sourceChainId
-                                )
-                                .map((chain) => chain.id)
+                              network.chains.map((chain) => chain.id)
                             )
                           }
                         >
@@ -491,51 +488,47 @@ export const SuperchainERC20ChecksPage = () => {
                       </div>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                      {chains
-                        .filter((chain) => chain.sourceId === sourceChainId)
-                        .map((chain) => (
-                          <div key={chain.id} className="relative">
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Button
-                                    variant={
-                                      selectedChainIds.includes(chain.id)
-                                        ? "default"
-                                        : "outline"
-                                    }
-                                    className="w-full justify-start"
-                                    onClick={() => {
-                                      setSelectedChainIds((prev) =>
-                                        prev.includes(chain.id)
-                                          ? prev.filter((id) => id !== chain.id)
-                                          : [...prev, chain.id]
-                                      );
-                                    }}
-                                  >
-                                    <span className="truncate">
-                                      {chain.name}
-                                    </span>
-                                    {rpcOverrideByChainId[chain.id] && (
-                                      <Wrench className="h-3 w-3 ml-1" />
-                                    )}
-                                  </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  RPC overriden:{" "}
-                                  {rpcOverrideByChainId[chain.id]?.length > 50
-                                    ? `${rpcOverrideByChainId[chain.id].slice(
-                                        0,
-                                        25
-                                      )}...${rpcOverrideByChainId[
-                                        chain.id
-                                      ].slice(-25)}`
-                                    : rpcOverrideByChainId[chain.id]}
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          </div>
-                        ))}
+                      {network.chains.map((chain) => (
+                        <div key={chain.id} className="relative">
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant={
+                                    selectedChainIds.includes(chain.id)
+                                      ? "default"
+                                      : "outline"
+                                  }
+                                  className="w-full justify-start"
+                                  onClick={() => {
+                                    setSelectedChainIds((prev) =>
+                                      prev.includes(chain.id)
+                                        ? prev.filter((id) => id !== chain.id)
+                                        : [...prev, chain.id]
+                                    );
+                                  }}
+                                >
+                                  <span className="truncate">{chain.name}</span>
+                                  {rpcOverrideByChainId[chain.id] && (
+                                    <Wrench className="h-3 w-3 ml-1" />
+                                  )}
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                RPC overriden:{" "}
+                                {rpcOverrideByChainId[chain.id]?.length > 50
+                                  ? `${rpcOverrideByChainId[chain.id].slice(
+                                      0,
+                                      25
+                                    )}...${rpcOverrideByChainId[chain.id].slice(
+                                      -25
+                                    )}`
+                                  : rpcOverrideByChainId[chain.id]}
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}

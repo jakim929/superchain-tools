@@ -9,7 +9,6 @@ import { WaitingToProve } from "@/withdrawal-status/WaitingToProve";
 import { ReadyToFinalize } from "@/withdrawal-status/ReadyToFinalize";
 import { WaitingToFinalize } from "@/withdrawal-status/WaitingToFinalize";
 import { Finalized } from "@/withdrawal-status/Finalized";
-import { supersimL1 } from "@eth-optimism/viem/chains";
 
 import { Search } from "lucide-react";
 import {
@@ -22,20 +21,22 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { chainById, sourceChains } from "@superchain-tools/chains";
+import {
+  chainById,
+  interopAlphaNetwork,
+  mainnetNetwork,
+  networkByName,
+  sepoliaNetwork,
+} from "@superchain-tools/chains";
 import { useConfig } from "@/stores/useConfig";
 import { AvailableNetworks } from "@/components/AvailableNetworks";
 import { Label } from "@/components/ui/label";
 import { NetworkPicker } from "@/components/NetworkPicker";
 import { L2ChainPicker } from "@/components/L2ChainPicker";
 
-// supersim doesn't support L2 to L1 withdrawals
-const supportedSourceChains = sourceChains.filter(
-  (chain) => chain.id !== supersimL1.id
-);
-
 export const L2ToL1RelayerPage = () => {
-  const { sourceChainId } = useConfig();
+  const { networkName } = useConfig();
+  const network = networkByName[networkName];
   const [selectedL2ChainId, setSelectedL2ChainId] = useState<number | null>(
     optimismSepolia.id
   );
@@ -49,7 +50,7 @@ export const L2ToL1RelayerPage = () => {
   return (
     <div className="flex flex-col gap-8 w-full max-w-3xl mx-auto px-4 sm:px-6 py-8">
       <AvailableNetworks
-        requiredSourceChainIds={supportedSourceChains.map((chain) => chain.id)}
+        requiredNetworks={[sepoliaNetwork, interopAlphaNetwork, mainnetNetwork]}
       />
       <Card>
         <CardHeader>
@@ -64,7 +65,7 @@ export const L2ToL1RelayerPage = () => {
           <div className="flex flex-col gap-4 sm:flex-row">
             <NetworkPicker />
 
-            {sourceChainId && (
+            {network && (
               <L2ChainPicker
                 label="Select L2 Chain"
                 chainId={selectedL2ChainId ?? undefined}

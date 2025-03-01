@@ -1,4 +1,3 @@
-import { GuideRoute } from "@/guides/GuideRoute";
 import { NavBarLayout } from "@/layouts/NavBarLayout";
 import { BridgePage } from "@/pages/BridgePage";
 import { ChainsPage } from "@/pages/ChainsPage";
@@ -7,6 +6,7 @@ import { L2ToL1RelayerPage } from "@/pages/L2ToL1RelayerPage";
 import { MultisendBridgePage } from "@/pages/MultisendBridgePage";
 import { SuperchainContractPage } from "@/pages/SuperchainContractPage";
 import { SuperchainERC20ChecksPage } from "@/pages/SuperchainERC20ChecksPage";
+import { SuperchainETHBridgePage } from "@/pages/SuperchainETHBridgePage";
 import { SuperchainMessageRelayer } from "@/pages/SuperchainMessageRelayer";
 import { SuperchainTokenBridgePage } from "@/pages/SuperchainTokenBridgePage";
 import {
@@ -44,6 +44,10 @@ const router = createBrowserRouter([
         element: <L2ToL1RelayerPage />,
       },
       {
+        path: "/superchain-eth-bridge",
+        element: <SuperchainETHBridgePage />,
+      },
+      {
         path: "/superchain-token-bridge",
         element: <SuperchainTokenBridgePage />,
       },
@@ -58,10 +62,6 @@ const router = createBrowserRouter([
       {
         path: "/contracts",
         element: <SuperchainContractPage />,
-      },
-      {
-        path: "/guides/*",
-        element: <GuideRoute />,
       },
     ],
   },

@@ -1,13 +1,14 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { sepolia } from "viem/chains";
-import { sourceChainById } from "@superchain-tools/chains";
+
+import { sepoliaNetwork, networkByName } from "@superchain-tools/chains";
 
 type Config = {
-  sourceChainId: number;
+  networkName: string;
+
   rpcOverrideByChainId: Record<number, string>;
 
-  setSourceChainId: (id: number) => void;
+  setNetworkName: (networkName: string) => void;
 
   setRpcOverrideByChainId: (chainId: number, rpcUrl: string) => void;
 };
@@ -15,15 +16,15 @@ type Config = {
 export const useConfig = create<Config>()(
   persist(
     (set, get) => ({
-      sourceChainId: sepolia.id,
+      networkName: sepoliaNetwork.name,
 
       rpcOverrideByChainId: {},
 
-      setSourceChainId: (id: number) => {
-        if (!sourceChainById[id]) {
-          throw new Error(`Source chain with id ${id} not supported`);
+      setNetworkName: (networkName: string) => {
+        if (!networkByName[networkName]) {
+          throw new Error(`Network with name ${networkName} not supported`);
         }
-        set({ sourceChainId: id });
+        set({ networkName });
       },
 
       setRpcOverrideByChainId: (chainId: number, rpcUrl: string) => {

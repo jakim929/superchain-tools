@@ -9,10 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useTokenInfo } from "@/hooks/useTokenInfo";
-import { Address, parseUnits } from "viem";
-import { contracts } from "@eth-optimism/viem";
-import { supersimL1 } from "@eth-optimism/viem/chains";
+import { parseUnits } from "viem";
+import { contracts, superchainWETHAbi } from "@eth-optimism/viem";
 import {
   useAccount,
   useSimulateContract,
@@ -20,14 +18,7 @@ import {
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
-import { superchainTokenBridgeAbi } from "@/constants/superchainTokenBridgeAbi";
-import {
-  chains,
-  interopAlphaNetwork,
-  networkByName,
-  sourceChains,
-  supersimNetwork,
-} from "@superchain-tools/chains";
+import { interopAlphaNetwork, supersimNetwork } from "@superchain-tools/chains";
 import { useConfig } from "@/stores/useConfig";
 import {
   Card,
@@ -37,21 +28,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Loader2, Send, CheckCircle2 } from "lucide-react";
-import { AvailableNetworks } from "@/components/AvailableNetworks";
 import { useTransactionStore } from "@/stores/useTransactionStore";
 import { NetworkPicker } from "@/components/NetworkPicker";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useNavigate } from "react-router-dom";
-import { networks } from "@superchain-tools/chains";
+import { networkByName, networks } from "@superchain-tools/chains";
+import { AvailableNetworks } from "@/components/AvailableNetworks";
 
-const supportedNetworks = [supersimNetwork, interopAlphaNetwork];
+const supportedNetworks = [interopAlphaNetwork, supersimNetwork];
 
-export const SuperchainTokenBridgePage = () => {
+export const SuperchainETHBridgePage = () => {
   const { address } = useAccount();
   const { networkName, setNetworkName } = useConfig();
   const [amount, setAmount] = useState("");
 
-  // Filter available chains based on source network
   const filteredChains = networkByName[networkName].chains;
 
   const [fromChainId, setFromChain] = useState<number>(
@@ -59,35 +49,23 @@ export const SuperchainTokenBridgePage = () => {
   );
 
   const [toChainId, setToChain] = useState<number>(filteredChains[1]?.id || 0);
-  const [tokenAddress, setTokenAddress] = useState<Address>(
-    "0xAaA2b0D6295b91505500B7630e9E36a461ceAd1b"
-  );
 
   const { addTransaction } = useTransactionStore();
 
-  const {
-    symbol,
-    decimals = 18,
-    name,
-    isLoading: isTokenLoading,
-  } = useTokenInfo({
-    address: tokenAddress as Address,
-    chainId: fromChainId,
-  });
-
-  const amountUnits = parseUnits(amount, decimals);
+  const amountUnits = parseUnits(amount, 18);
 
   const { switchChain } = useSwitchChain();
 
   const simulationResult = useSimulateContract({
-    abi: superchainTokenBridgeAbi,
-    address: contracts.superchainTokenBridge.address,
-    functionName: "sendERC20",
-    args: [tokenAddress, address!, amountUnits, BigInt(toChainId)],
+    abi: superchainWETHAbi,
+    address: contracts.superchainWETH.address,
+    functionName: "sendETH",
+    args: [address!, BigInt(toChainId)],
     chainId: fromChainId,
     query: {
       enabled: Boolean(fromChainId && toChainId && address && amount),
     },
+    value: amountUnits,
   });
 
   const {
@@ -110,7 +88,9 @@ export const SuperchainTokenBridgePage = () => {
     const numChainId = parseInt(chainId);
     setFromChain(numChainId);
     if (numChainId === toChainId) {
-      const availableChains = chains.filter((chain) => chain.id !== numChainId);
+      const availableChains = networkByName[networkName].chains.filter(
+        (chain) => chain.id !== numChainId
+      );
       setToChain(availableChains[0]?.id || 0);
     }
     reset();
@@ -132,10 +112,10 @@ export const SuperchainTokenBridgePage = () => {
     isLoading ||
     !simulationResult.data?.request;
 
-  // Set default source chain if not set
+  // Set default network if not set
   useEffect(() => {
-    if (!networkName && supportedNetworks.length > 0) {
-      setNetworkName(supportedNetworks[0].name);
+    if (!networkName && networks.length > 0) {
+      setNetworkName(networks[0].name);
     }
   }, [networkName, setNetworkName]);
 
@@ -174,41 +154,19 @@ export const SuperchainTokenBridgePage = () => {
       <Card>
         <CardHeader className="space-y-1">
           <CardTitle className="text-lg sm:text-xl">
-            Bridge SuperchainERC20 between Superchain L2s
+            Bridge ETH between Superchain L2s
           </CardTitle>
           <CardDescription className="text-sm">
-            Transfer assets between networks
+            Transfer ETH between networks
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 sm:space-y-6">
           <div className="space-y-4">
-            <NetworkPicker />
-
-            <div className="space-y-2">
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-                <Label>Token Address</Label>
-                {fromChainId !== 0 &&
-                  (isTokenLoading ? (
-                    <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Loading...
-                    </div>
-                  ) : (
-                    <div className="text-xs sm:text-sm text-muted-foreground sm:text-right">
-                      {name && `${name} • `}
-                      {symbol && `${symbol} • `}
-                      {decimals && `${decimals} decimals`}
-                    </div>
-                  ))}
-              </div>
-              <Input
-                type="text"
-                placeholder="0x..."
-                value={tokenAddress}
-                onChange={(e) => setTokenAddress(e.target.value)}
-                className="font-mono text-sm"
-              />
-            </div>
+            <NetworkPicker
+              allowedNetworkNames={supportedNetworks.map(
+                (network) => network.name
+              )}
+            />
 
             <div className="space-y-2">
               <Label>Amount</Label>

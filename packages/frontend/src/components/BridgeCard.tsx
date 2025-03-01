@@ -37,7 +37,7 @@ import { ToastAction } from "@/components/ui/toast";
 import { truncateHash } from "@/lib/truncateHash";
 import { ArrowRight } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { chains as l2Chains } from "@superchain-tools/chains";
+import { chains as l2Chains, Network } from "@superchain-tools/chains";
 import { l1StandardBridgeAbi } from "@/constants/l1StandardBridgeAbi";
 import { optimism } from "viem/chains";
 
@@ -322,14 +322,9 @@ const SwitchToChainButton = ({ chain }: { chain: Chain }) => {
   );
 };
 
-export const BridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
-  const chainId = l1Chain.id;
-  const chains = l2Chains.filter(
-    (chain) =>
-      chain.sourceId === chainId &&
-      // @ts-ignore
-      Boolean(chain.contracts?.l1StandardBridge?.[chainId]?.address)
-  );
+export const BridgeCard = ({ network }: { network: Network }) => {
+  const chainId = network.sourceChain.id;
+  const chains = network.chains;
 
   const formattedL1Balance = useFormattedBalance(chainId);
   const { chain } = useAccount();
@@ -379,7 +374,10 @@ export const BridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
             <ToastAction
               altText="View on explorer"
               onClick={() => {
-                window.open(getBlockExplorerLink(l1Chain, hash), "_blank");
+                window.open(
+                  getBlockExplorerLink(network.sourceChain, hash),
+                  "_blank"
+                );
               }}
             >
               View on explorer
@@ -399,7 +397,7 @@ export const BridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
     <Card className="flex-1">
       <CardHeader>
         <div className="flex items-center justify-between h-8">
-          <CardTitle>{l1Chain.name}</CardTitle>
+          <CardTitle>{network.sourceChain.name}</CardTitle>
           <div className="flex items-center gap-2">
             <span className="text-sm font-normal text-muted-foreground">
               Balance:
@@ -424,7 +422,7 @@ export const BridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
         <Preview selectedChains={selectedChains} amount={amount} />
       </CardContent>
       <CardFooter className="flex gap-2">
-        {chain?.id === l1Chain.id ? (
+        {chain?.id === network.sourceChain.id ? (
           <Button
             className="w-full gap-2"
             disabled={
@@ -440,7 +438,7 @@ export const BridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
             Bridge <ArrowRight className="w-4 h-4" />
           </Button>
         ) : (
-          <SwitchToChainButton chain={l1Chain} />
+          <SwitchToChainButton chain={network.sourceChain} />
         )}
       </CardFooter>
     </Card>

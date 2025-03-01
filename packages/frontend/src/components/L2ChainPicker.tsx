@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { useConfig } from "@/stores/useConfig";
-import { chains } from "@superchain-tools/chains";
+import { networkByName } from "@superchain-tools/chains";
 
 interface ChainPickerProps {
   label?: string;
@@ -22,11 +22,9 @@ export const L2ChainPicker = ({
   onChange,
   placeholder = "Select Chain",
 }: ChainPickerProps) => {
-  const { sourceChainId } = useConfig();
+  const { networkName } = useConfig();
 
-  const filteredChains = sourceChainId
-    ? chains.filter((chain) => chain.sourceId === sourceChainId)
-    : chains;
+  const filteredChains = networkByName[networkName].chains;
 
   return (
     <div className="space-y-2 flex-1">

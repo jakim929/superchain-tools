@@ -35,11 +35,10 @@ import { Multicall3Abi } from "@/constants/Multicall3Abi";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { truncateHash } from "@/lib/truncateHash";
-import { ArrowRight, X } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { chains as l2Chains } from "@superchain-tools/chains";
+import { Network } from "@superchain-tools/chains";
 import { l1StandardBridgeAbi } from "@/constants/l1StandardBridgeAbi";
-import { optimism } from "viem/chains";
 import { WalletAddressInput } from "./WalletAddressInput";
 
 const truncateDecimal = (
@@ -267,8 +266,9 @@ const Preview = ({
   amount: bigint;
   addresses: Address[];
 }) => {
-  const totalAmount = BigInt(selectedChains.length) * BigInt(addresses.length) * amount;
-  
+  const totalAmount =
+    BigInt(selectedChains.length) * BigInt(addresses.length) * amount;
+
   return (
     <div className="flex flex-col gap-4 p-4 bg-muted/30 rounded-lg">
       <div className="flex justify-between items-center">
@@ -333,9 +333,10 @@ const SwitchToChainButton = ({ chain }: { chain: Chain }) => {
   );
 };
 
-export const MultisendBridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
-  const chainId = l1Chain.id;
-  const chains = l2Chains.filter(
+export const MultisendBridgeCard = ({ network }: { network: Network }) => {
+  const l1Chain = network.sourceChain;
+  const chainId = network.sourceChain.id;
+  const chains = network.chains.filter(
     (chain) =>
       chain.sourceId === chainId &&
       // @ts-ignore
@@ -351,7 +352,6 @@ export const MultisendBridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
 
   const { selectedChains, allChains, setIsSelected, isSelectedByChainId } =
     useNetworkSelection(chains);
-    
 
   const [amount, setAmount] = useState<bigint>(0n);
 
@@ -360,17 +360,17 @@ export const MultisendBridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
     functionName: "aggregate3Value",
     address: "0xcA11bde05977b3631167028862bE2a173976CA11",
     args: [
-        addresses.flatMap((address) => {
-          return selectedChains.map((selectedChain) => {
-            return {
-              target:
-                selectedChain!.contracts!.l1StandardBridge[chainId]!.address!,
+      addresses.flatMap((address) => {
+        return selectedChains.map((selectedChain) => {
+          return {
+            target:
+              selectedChain!.contracts!.l1StandardBridge[chainId]!.address!,
             allowFailure: false,
             callData: getBridgeFundsFunctionData(address!),
             value: amount,
-            };
-          });
-        })
+          };
+        });
+      }),
     ],
     value: amount * BigInt(selectedChains.length) * BigInt(addresses.length),
     // enabled: !!address && amount > 0n && opStackChains.length > 0,
@@ -433,7 +433,11 @@ export const MultisendBridgeCard = ({ l1Chain }: { l1Chain: Chain }) => {
         <WalletAddressInput addresses={addresses} setAddresses={setAddresses} />
         <AmountInput amount={amount} setAmount={setAmount} />
         <Separator className="" />
-        <Preview selectedChains={selectedChains} amount={amount} addresses={addresses} />
+        <Preview
+          selectedChains={selectedChains}
+          amount={amount}
+          addresses={addresses}
+        />
       </CardContent>
       <CardFooter className="flex gap-2">
         {chain?.id === l1Chain.id ? (

@@ -23,7 +23,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { SelectSourceChain } from "@/components/SelectSourceChain";
+import { SelectNetwork } from "@/components/SelectNetwork";
 
 const NavItem = ({
   to,
@@ -55,7 +55,7 @@ export const SideNav = () => {
       <SidebarHeader className="p-4">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SelectSourceChain />
+            <SelectNetwork />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
@@ -95,6 +95,11 @@ export const SideNav = () => {
                 icon={CheckCircle}
               />
               <NavItem
+                to="/superchain-eth-bridge"
+                title="Superchain ETH Bridge"
+                icon={ArrowLeftRight}
+              />
+              <NavItem
                 to="/superchain-token-bridge"
                 title="Superchain Token Bridge"
                 icon={ArrowLeftRight}
@@ -118,15 +123,6 @@ export const SideNav = () => {
           <SidebarGroupContent>
             <SidebarMenu>
               <NavItem to="/config" title="RPC Overrides" icon={Settings} />
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup>
-          <SidebarGroupLabel>Guides</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <NavItem to="/chains" title="Deploying SuperchainERC20" />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

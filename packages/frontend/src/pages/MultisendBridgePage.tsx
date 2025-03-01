@@ -1,41 +1,42 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { sourceChains } from "@superchain-tools/chains";
+import {
+  interopAlphaNetwork,
+  sepoliaNetwork,
+  supersimNetwork,
+} from "@superchain-tools/chains";
 import { useConfig } from "@/stores/useConfig";
-import { supersimL1 } from "@eth-optimism/viem/chains";
-import { sepolia } from "viem/chains";
 import { AvailableNetworks } from "@/components/AvailableNetworks";
 import { MultisendBridgeCard } from "@/components/MultisendBridgeCard";
 
-const supportedSourceChains = [sepolia, supersimL1];
+const supportedNetworks = [
+  sepoliaNetwork,
+  interopAlphaNetwork,
+  supersimNetwork,
+];
 
 export const MultisendBridgePage = () => {
-  const { sourceChainId, setSourceChainId } = useConfig();
+  const { networkName, setNetworkName } = useConfig();
 
   return (
     <div className="flex flex-col gap-4 max-w-2xl mx-auto">
-      <AvailableNetworks
-        requiredSourceChainIds={supportedSourceChains.map((chain) => chain.id)}
-      />
-      <Tabs
-        defaultValue={sourceChainId.toString()}
-        value={sourceChainId.toString()}
-      >
+      <AvailableNetworks requiredNetworks={supportedNetworks} />
+      <Tabs defaultValue={networkName} value={networkName}>
         <TabsList className="w-full flex">
-          {supportedSourceChains.map((sourceChain) => (
+          {supportedNetworks.map((network) => (
             <TabsTrigger
-              onClick={() => setSourceChainId(sourceChain.id)}
+              onClick={() => setNetworkName(network.name)}
               className="flex-1 relative"
-              key={sourceChain.name}
-              value={sourceChain.id.toString()}
+              key={network.name}
+              value={network.name}
             >
-              {sourceChain.name}
+              {network.name}
             </TabsTrigger>
           ))}
         </TabsList>
-        {sourceChains.map((chain) => {
+        {supportedNetworks.map((network) => {
           return (
-            <TabsContent key={chain.name} value={chain.id.toString()}>
-              <MultisendBridgeCard l1Chain={chain} />
+            <TabsContent key={network.name} value={network.name}>
+              <MultisendBridgeCard network={network} />
             </TabsContent>
           );
         })}

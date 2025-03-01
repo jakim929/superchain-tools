@@ -1,22 +1,22 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
 import { useConfig } from "@/stores/useConfig";
-import { sourceChainById } from "@superchain-tools/chains";
+import { Network } from "@superchain-tools/chains";
 import { NetworkPicker } from "@/components/NetworkPicker";
 
 export const AvailableNetworks = ({
-  requiredSourceChainIds,
+  requiredNetworks,
 }: {
-  requiredSourceChainIds: number[];
+  requiredNetworks: Network[];
 }) => {
-  const { sourceChainId } = useConfig();
+  const { networkName } = useConfig();
 
-  if (requiredSourceChainIds.includes(sourceChainId)) {
+  if (requiredNetworks.map((network) => network.name).includes(networkName)) {
     return null;
   }
 
-  const networkNames = requiredSourceChainIds
-    .map((id) => sourceChainById[id]?.name ?? `Chain ${id}`)
+  const networkNames = requiredNetworks
+    .map((network) => network.name)
     .join(", ");
 
   return (
@@ -31,7 +31,9 @@ export const AvailableNetworks = ({
         </div>
       </div>
       <div className="text-foreground">
-        <NetworkPicker allowedChainIds={requiredSourceChainIds} />
+        <NetworkPicker
+          allowedNetworkNames={requiredNetworks.map((network) => network.name)}
+        />
       </div>
     </Alert>
   );

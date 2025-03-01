@@ -45,10 +45,13 @@ import {
   useReadContract,
 } from "wagmi";
 
-import { contracts } from "@eth-optimism/viem";
-import { supersimL1, supersimL2A } from "@eth-optimism/viem/chains";
-import { l2ToL2CrossDomainMessengerAbi } from "@eth-optimism/viem";
-import { chainById } from "@superchain-tools/chains";
+import { contracts, l2ToL2CrossDomainMessengerAbi } from "@eth-optimism/viem";
+import { supersimL2A } from "@eth-optimism/viem/chains";
+import {
+  chainById,
+  interopAlphaNetwork,
+  supersimNetwork,
+} from "@superchain-tools/chains";
 import { predeployByContractAddress } from "@/constants/predeployByContractAddress";
 import { getL2ToL2CrossDomainMessageHash } from "@/lib/getL2ToL2CrossDomainMessageHash";
 import { encodeL2ToL2CrossDomainSentMessageEvent } from "@/lib/encodeL2ToL2CrossDomainSentMessageEvent";
@@ -69,7 +72,9 @@ export const SuperchainMessageRelayer = () => {
         </p>
       </div>
 
-      <AvailableNetworks requiredSourceChainIds={[supersimL1.id]} />
+      <AvailableNetworks
+        requiredNetworks={[interopAlphaNetwork, supersimNetwork]}
+      />
 
       <Relayer />
     </div>
@@ -78,7 +83,6 @@ export const SuperchainMessageRelayer = () => {
 
 const Relayer = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
 
   // Get values from URL params, fallback to defaults
   const selectedL2ChainId = searchParams.get("chainId")
@@ -320,7 +324,7 @@ const TransactionDetails = ({
   }
 
   const logs = parseEventLogs({
-    abi: l2ToL2CrossDomainMessengerABI,
+    abi: l2ToL2CrossDomainMessengerAbi,
     logs: receipt.logs,
     eventName: "SentMessage",
   });
@@ -501,7 +505,7 @@ const SingleMessageDetails = ({
   } = useReadContract({
     address: contracts.l2ToL2CrossDomainMessenger.address,
     chainId: Number(destination),
-    abi: l2ToL2CrossDomainMessengerABI,
+    abi: l2ToL2CrossDomainMessengerAbi,
     functionName: "successfulMessages",
     args: [messageHash],
   });
@@ -641,7 +645,7 @@ const MessageRelayer = ({
 
   const { data: simulatedData, error: simulateContractError } =
     useSimulateContract({
-      abi: l2ToL2CrossDomainMessengerABI,
+      abi: l2ToL2CrossDomainMessengerAbi,
       functionName: "relayMessage",
       address: contracts.l2ToL2CrossDomainMessenger.address,
       args: [
